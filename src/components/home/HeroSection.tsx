@@ -32,8 +32,8 @@ export const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight mb-6"
           >
-            Embrace Your
-            <span className="block text-accent">Natural Beauty</span>
+            Confidence,
+            <span className="block text-gradient-rose">Refined.</span>
           </motion.h1>
           
           <motion.p
@@ -54,7 +54,7 @@ export const HeroSection = () => {
           >
             <Button 
               size="lg" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-base font-medium btn-elegant"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-6 text-base font-medium btn-elegant shadow-rose"
             >
               Shop Now
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -62,7 +62,7 @@ export const HeroSection = () => {
             <Button 
               variant="outline" 
               size="lg"
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-6 text-base font-medium btn-elegant"
+              className="border-foreground text-foreground hover:bg-foreground hover:text-background px-8 py-6 text-base font-medium btn-elegant"
             >
               View Lookbook
             </Button>
@@ -76,7 +76,7 @@ export const HeroSection = () => {
           <button
             key={i}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              i === 0 ? "bg-accent w-8" : "bg-primary/30 hover:bg-primary/50"
+              i === 0 ? "bg-accent w-8" : "bg-foreground/30 hover:bg-foreground/50"
             }`}
             aria-label={`Slide ${i + 1}`}
           />

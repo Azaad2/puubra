@@ -45,7 +45,7 @@ const itemVariants = {
 
 export const FeaturedCollections = () => {
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-16 md:py-24 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <motion.h2
@@ -94,7 +94,7 @@ export const FeaturedCollections = () => {
                   <p className="text-white/70 text-sm hidden md:block">
                     {collection.description}
                   </p>
-                  <span className="inline-flex items-center text-gold text-sm mt-2 group-hover:translate-x-2 transition-transform duration-300">
+                  <span className="inline-flex items-center text-accent text-sm mt-2 group-hover:translate-x-2 transition-transform duration-300">
                     Shop Now →
                   </span>
                 </div>

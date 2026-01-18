@@ -74,7 +74,7 @@ export const CustomerReviews = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-cream">
+    <section className="py-16 md:py-24 bg-secondary/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <motion.span
@@ -103,7 +103,7 @@ export const CustomerReviews = () => {
           >
             <div className="flex">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-5 w-5 fill-gold text-gold" />
+                <Star key={i} className="h-5 w-5 fill-accent text-accent" />
               ))}
             </div>
             <span className="text-muted-foreground">
@@ -136,7 +136,7 @@ export const CustomerReviews = () => {
                 variant="outline"
                 size="icon"
                 onClick={prevReview}
-                className="rounded-full"
+                className="rounded-full border-accent text-accent hover:bg-accent hover:text-accent-foreground"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -155,7 +155,7 @@ export const CustomerReviews = () => {
                 variant="outline"
                 size="icon"
                 onClick={nextReview}
-                className="rounded-full"
+                className="rounded-full border-accent text-accent hover:bg-accent hover:text-accent-foreground"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -169,8 +169,8 @@ export const CustomerReviews = () => {
 
 const ReviewCard = ({ review }: { review: Review }) => {
   return (
-    <div className="bg-card p-6 rounded-sm shadow-sm h-full flex flex-col">
-      <Quote className="h-8 w-8 text-gold/30 mb-4" />
+    <div className="bg-card p-6 rounded-sm shadow-sm h-full flex flex-col border border-border">
+      <Quote className="h-8 w-8 text-accent/30 mb-4" />
       
       {/* Rating */}
       <div className="flex mb-3">
@@ -178,7 +178,7 @@ const ReviewCard = ({ review }: { review: Review }) => {
           <Star
             key={i}
             className={`h-4 w-4 ${
-              i < review.rating ? "fill-gold text-gold" : "text-muted"
+              i < review.rating ? "fill-accent text-accent" : "text-muted"
             }`}
           />
         ))}
