@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/shapesilk-logo.jpeg";
 
 const footerLinks = {
   shop: [
@@ -42,7 +43,7 @@ export const Footer = () => {
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-xl mx-auto text-center">
             <h3 className="font-serif text-2xl md:text-3xl mb-2">
-              Join the Jelly Bra Family
+              Join the ShapeSilk Family
             </h3>
             <p className="text-primary-foreground/70 text-sm mb-6">
               Subscribe for exclusive offers, new arrivals, and 10% off your first order.
@@ -51,9 +52,9 @@ export const Footer = () => {
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold"
+                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-accent"
               />
-              <Button className="bg-gold hover:bg-gold-light text-charcoal font-medium px-6 whitespace-nowrap">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium px-6 whitespace-nowrap">
                 Subscribe
               </Button>
             </form>
@@ -67,17 +68,21 @@ export const Footer = () => {
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1 lg:col-span-1">
             <Link to="/" className="inline-block mb-4">
-              <h2 className="font-serif text-2xl font-semibold">Jelly Bra</h2>
+              <img 
+                src={logo} 
+                alt="ShapeSilk" 
+                className="h-16 w-auto object-contain"
+              />
             </Link>
             <p className="text-primary-foreground/70 text-sm mb-4">
-              Where comfort meets elegance. Premium lingerie designed for every body.
+              Confidence, refined. Premium lingerie designed for every body.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}
                   href={social.href}
-                  className="text-primary-foreground/70 hover:text-gold transition-colors"
+                  className="text-primary-foreground/70 hover:text-accent transition-colors"
                   aria-label={social.name}
                 >
                   <social.icon className="h-5 w-5" />
@@ -88,7 +93,7 @@ export const Footer = () => {
 
           {/* Shop Links */}
           <div>
-            <h4 className="font-medium text-sm uppercase tracking-wider mb-4">Shop</h4>
+            <h4 className="font-medium text-sm uppercase tracking-wider mb-4 text-accent">Shop</h4>
             <ul className="space-y-2">
               {footerLinks.shop.map((link) => (
                 <li key={link.name}>
@@ -105,7 +110,7 @@ export const Footer = () => {
 
           {/* Help Links */}
           <div>
-            <h4 className="font-medium text-sm uppercase tracking-wider mb-4">Help</h4>
+            <h4 className="font-medium text-sm uppercase tracking-wider mb-4 text-accent">Help</h4>
             <ul className="space-y-2">
               {footerLinks.help.map((link) => (
                 <li key={link.name}>
@@ -122,7 +127,7 @@ export const Footer = () => {
 
           {/* Company Links */}
           <div>
-            <h4 className="font-medium text-sm uppercase tracking-wider mb-4">Company</h4>
+            <h4 className="font-medium text-sm uppercase tracking-wider mb-4 text-accent">Company</h4>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -139,13 +144,13 @@ export const Footer = () => {
 
           {/* Contact */}
           <div className="col-span-2 md:col-span-1">
-            <h4 className="font-medium text-sm uppercase tracking-wider mb-4">Contact</h4>
+            <h4 className="font-medium text-sm uppercase tracking-wider mb-4 text-accent">Contact</h4>
             <a
-              href="mailto:hello@jellybra.com"
+              href="mailto:hello@shapesilk.com"
               className="flex items-center gap-2 text-primary-foreground/70 hover:text-primary-foreground text-sm transition-colors"
             >
               <Mail className="h-4 w-4" />
-              hello@jellybra.com
+              hello@shapesilk.com
             </a>
           </div>
         </div>
@@ -156,7 +161,7 @@ export const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-primary-foreground/50 text-xs">
-              © {new Date().getFullYear()} Jelly Bra. All rights reserved.
+              © {new Date().getFullYear()} ShapeSilk. All rights reserved.
             </p>
             <div className="flex items-center gap-4">
               <Link

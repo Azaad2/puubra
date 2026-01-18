@@ -27,7 +27,7 @@ const products: Product[] = [
     image: "https://images.unsplash.com/photo-1616530940355-351fabd9524b?q=80&w=500&auto=format&fit=crop",
     rating: 4.8,
     reviewCount: 234,
-    colors: ["#F5E6D3", "#2D2D2D", "#E8B4B8"],
+    colors: ["#F5E6D3", "#2D2D2D", "#B87E6E"],
     isSale: true,
   },
   {
@@ -47,7 +47,7 @@ const products: Product[] = [
     image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=500&auto=format&fit=crop",
     rating: 4.7,
     reviewCount: 312,
-    colors: ["#F5E6D3", "#2D2D2D", "#8B7355", "#E8B4B8"],
+    colors: ["#F5E6D3", "#2D2D2D", "#8B7355", "#B87E6E"],
   },
   {
     id: "4",
@@ -77,7 +77,7 @@ const itemVariants = {
 
 export const BestSellers = () => {
   return (
-    <section className="py-16 md:py-24 bg-secondary/30">
+    <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
           <div>
@@ -144,7 +144,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             <Badge className="bg-charcoal text-white text-xs px-2 py-1">New</Badge>
           )}
           {product.isSale && (
-            <Badge className="bg-rose text-charcoal text-xs px-2 py-1">Sale</Badge>
+            <Badge className="bg-accent text-accent-foreground text-xs px-2 py-1">Sale</Badge>
           )}
         </div>
 
@@ -155,7 +155,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         >
           <Heart
             className={`h-4 w-4 transition-colors ${
-              isFavorite ? "fill-rose text-rose" : "text-charcoal"
+              isFavorite ? "fill-accent text-accent" : "text-charcoal"
             }`}
           />
         </button>
@@ -177,7 +177,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       <div>
         {/* Rating */}
         <div className="flex items-center gap-1 mb-1">
-          <Star className="h-3.5 w-3.5 fill-gold text-gold" />
+          <Star className="h-3.5 w-3.5 fill-accent text-accent" />
           <span className="text-xs text-muted-foreground">
             {product.rating} ({product.reviewCount})
           </span>

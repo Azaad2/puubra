@@ -1,12 +1,31 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { HeroSection } from "@/components/home/HeroSection";
+import { FeaturedCollections } from "@/components/home/FeaturedCollections";
+import { BestSellers } from "@/components/home/BestSellers";
+import { PromoBanner } from "@/components/home/PromoBanner";
+import { BrandStory } from "@/components/home/BrandStory";
+import { CustomerReviews } from "@/components/home/CustomerReviews";
+import { UGCGallery } from "@/components/home/UGCGallery";
+import { TrustBadges } from "@/components/home/TrustBadges";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <AnnouncementBar />
+      <Header />
+      <main className="flex-grow">
+        <HeroSection />
+        <FeaturedCollections />
+        <BestSellers />
+        <PromoBanner />
+        <BrandStory />
+        <CustomerReviews />
+        <UGCGallery />
+        <TrustBadges />
+      </main>
+      <Footer />
     </div>
   );
 };

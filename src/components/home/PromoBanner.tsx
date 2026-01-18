@@ -13,13 +13,13 @@ export const PromoBanner = () => {
           className="flex flex-col md:flex-row items-center justify-between gap-6"
         >
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gold/20 rounded-full">
-              <Gift className="h-8 w-8 text-gold" />
+            <div className="p-3 bg-gradient-rose rounded-full">
+              <Gift className="h-8 w-8 text-white" />
             </div>
             <div>
               <h3 className="font-serif text-xl md:text-2xl font-semibold flex items-center gap-2">
                 Unlock a Free Gift
-                <Sparkles className="h-5 w-5 text-gold" />
+                <Sparkles className="h-5 w-5 text-accent" />
               </h3>
               <p className="text-primary-foreground/70 text-sm">
                 Spend $75 or more and receive a free surprise gift with your order
@@ -28,7 +28,7 @@ export const PromoBanner = () => {
           </div>
           <Button 
             size="lg"
-            className="bg-gold hover:bg-gold-light text-charcoal font-medium px-8 whitespace-nowrap"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium px-8 whitespace-nowrap shadow-rose"
           >
             Shop Now & Unlock
           </Button>

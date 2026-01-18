@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/shapesilk-logo.jpeg";
 
 const navLinks = [
   { name: "Bras", href: "/collections/bras" },
@@ -14,7 +15,7 @@ const navLinks = [
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const cartItemCount = 0; // This will be connected to Shopify later
+  const cartItemCount = 0;
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
@@ -44,10 +45,12 @@ export const Header = () => {
           </Sheet>
 
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <h1 className="text-xl md:text-2xl font-serif font-semibold tracking-tight">
-              Jelly Bra
-            </h1>
+          <Link to="/" className="flex items-center gap-3">
+            <img 
+              src={logo} 
+              alt="ShapeSilk" 
+              className="h-10 md:h-12 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}
