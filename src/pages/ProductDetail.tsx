@@ -1,40 +1,11 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Heart, Minus, Plus, ChevronLeft, ChevronRight, Check, Truck, RotateCcw, Shield } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-
-const productData = {
-  id: "1",
-  name: "Signature Silk Bralette",
-  price: 89,
-  originalPrice: 129,
-  rating: 4.8,
-  reviewCount: 247,
-  description: "Experience unparalleled comfort with our signature silk bralette. Crafted from premium mulberry silk with delicate rose gold hardware, this piece offers the perfect blend of luxury and support.",
-  features: [
-    "100% Mulberry Silk",
-    "Rose gold hardware accents",
-    "Wireless comfort design",
-    "Adjustable straps",
-    "Hand wash recommended"
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1616530940355-351fabd9524b?w=800&q=80",
-    "https://images.unsplash.com/photo-1564203492257-8ce9aa4361e9?w=800&q=80",
-    "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80",
-    "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&q=80"
-  ],
-  colors: [
-    { name: "Rose Blush", value: "#E8C4B8" },
-    { name: "Midnight Black", value: "#1a1a1a" },
-    { name: "Champagne", value: "#F5E6D3" },
-    { name: "Deep Burgundy", value: "#722F37" }
-  ],
-  sizes: ["XS", "S", "M", "L", "XL"]
-};
+import { getProductBySlug, getProductById, Product } from "@/data/products";
 
 const reviews = [
   {
@@ -43,7 +14,7 @@ const reviews = [
     rating: 5,
     date: "2 weeks ago",
     title: "Absolutely stunning quality",
-    content: "The silk is so soft and the fit is perfect. I've never felt more confident. Worth every penny!",
+    content: "So comfortable and the fit is perfect. I've never felt more confident. Worth every penny!",
     verified: true
   },
   {
@@ -52,7 +23,7 @@ const reviews = [
     rating: 5,
     date: "1 month ago",
     title: "My new favorite",
-    content: "Beautiful design and incredibly comfortable. The rose gold details are gorgeous. Already ordered two more colors!",
+    content: "Beautiful design and incredibly comfortable. Already ordered two more colors!",
     verified: true
   },
   {
@@ -68,18 +39,61 @@ const reviews = [
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const [product, setProduct] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
+  useEffect(() => {
+    if (id) {
+      // Try to find by slug first, then by id
+      const foundProduct = getProductBySlug(id) || getProductById(id);
+      setProduct(foundProduct || null);
+      setSelectedImage(0);
+      setSelectedColor(0);
+      setSelectedSize(null);
+    }
+  }, [id]);
+
+  // When color changes, update the selected image to show the color's image
+  useEffect(() => {
+    if (product && product.colors[selectedColor]) {
+      const colorImage = product.colors[selectedColor].image;
+      const imageIndex = product.images.indexOf(colorImage);
+      if (imageIndex !== -1) {
+        setSelectedImage(imageIndex);
+      }
+    }
+  }, [selectedColor, product]);
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4 text-center py-20">
+            <h1 className="font-serif text-3xl mb-4">Product Not Found</h1>
+            <p className="text-muted-foreground mb-8">The product you're looking for doesn't exist.</p>
+            <Link to="/collections/bras">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                Browse Products
+              </Button>
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % productData.images.length);
+    setSelectedImage((prev) => (prev + 1) % product.images.length);
   };
 
   const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + productData.images.length) % productData.images.length);
+    setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
   };
 
   return (
@@ -90,11 +104,11 @@ const ProductDetail = () => {
         <div className="container mx-auto px-4">
           {/* Breadcrumb */}
           <nav className="text-sm text-muted-foreground mb-8">
-            <span className="hover:text-rose-gold cursor-pointer transition-colors">Home</span>
+            <Link to="/" className="hover:text-accent transition-colors">Home</Link>
             <span className="mx-2">/</span>
-            <span className="hover:text-rose-gold cursor-pointer transition-colors">Bralettes</span>
+            <Link to="/collections/bras" className="hover:text-accent transition-colors">Bras</Link>
             <span className="mx-2">/</span>
-            <span className="text-foreground">{productData.name}</span>
+            <span className="text-foreground">{product.name}</span>
           </nav>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
@@ -105,8 +119,8 @@ const ProductDetail = () => {
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={selectedImage}
-                    src={productData.images[selectedImage]}
-                    alt={productData.name}
+                    src={product.images[selectedImage]}
+                    alt={product.name}
                     className="w-full h-full object-cover"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -118,33 +132,42 @@ const ProductDetail = () => {
                 {/* Navigation Arrows */}
                 <button 
                   onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-gold hover:text-background"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:text-accent-foreground"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-gold hover:text-background"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:text-accent-foreground"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
 
-                {/* Sale Badge */}
-                <div className="absolute top-4 left-4 bg-rose-gold text-background px-3 py-1 text-sm font-medium rounded">
-                  SALE
+                {/* Badges */}
+                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                  {product.isNew && (
+                    <div className="bg-foreground text-background px-3 py-1 text-sm font-medium rounded">
+                      NEW
+                    </div>
+                  )}
+                  {product.isSale && (
+                    <div className="bg-accent text-accent-foreground px-3 py-1 text-sm font-medium rounded">
+                      SALE
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Thumbnail Grid */}
               <div className="grid grid-cols-4 gap-3">
-                {productData.images.map((image, index) => (
+                {product.images.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImage === index 
-                        ? "border-rose-gold" 
-                        : "border-transparent hover:border-rose-gold/50"
+                        ? "border-accent" 
+                        : "border-transparent hover:border-accent/50"
                     }`}
                   >
                     <img 
@@ -162,18 +185,18 @@ const ProductDetail = () => {
               {/* Title & Rating */}
               <div>
                 <h1 className="font-serif text-3xl lg:text-4xl text-foreground mb-3">
-                  {productData.name}
+                  {product.name}
                 </h1>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
                       <Star 
                         key={i} 
-                        className={`w-4 h-4 ${i < Math.floor(productData.rating) ? "fill-rose-gold text-rose-gold" : "text-muted-foreground"}`}
+                        className={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-accent text-accent" : "text-muted-foreground"}`}
                       />
                     ))}
                     <span className="text-sm text-muted-foreground ml-2">
-                      {productData.rating} ({productData.reviewCount} reviews)
+                      {product.rating} ({product.reviewCount} reviews)
                     </span>
                   </div>
                 </div>
@@ -181,38 +204,42 @@ const ProductDetail = () => {
 
               {/* Price */}
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-serif text-rose-gold">${productData.price}</span>
-                <span className="text-lg text-muted-foreground line-through">${productData.originalPrice}</span>
-                <span className="text-sm text-rose-gold font-medium">
-                  Save ${productData.originalPrice - productData.price}
-                </span>
+                <span className="text-3xl font-serif text-accent">${product.price}</span>
+                {product.originalPrice && (
+                  <>
+                    <span className="text-lg text-muted-foreground line-through">${product.originalPrice}</span>
+                    <span className="text-sm text-accent font-medium">
+                      Save ${product.originalPrice - product.price}
+                    </span>
+                  </>
+                )}
               </div>
 
               {/* Description */}
               <p className="text-muted-foreground leading-relaxed">
-                {productData.description}
+                {product.description}
               </p>
 
               {/* Color Selector */}
               <div className="space-y-3">
                 <label className="text-sm font-medium text-foreground">
-                  Color: <span className="text-muted-foreground">{productData.colors[selectedColor].name}</span>
+                  Color: <span className="text-muted-foreground">{product.colors[selectedColor].name}</span>
                 </label>
                 <div className="flex gap-3">
-                  {productData.colors.map((color, index) => (
+                  {product.colors.map((color, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedColor(index)}
                       className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${
                         selectedColor === index 
-                          ? "border-rose-gold scale-110" 
+                          ? "border-accent scale-110" 
                           : "border-transparent hover:scale-105"
                       }`}
                       style={{ backgroundColor: color.value }}
                       title={color.name}
                     >
                       {selectedColor === index && (
-                        <Check className={`w-4 h-4 ${color.value === "#1a1a1a" ? "text-white" : "text-background"}`} />
+                        <Check className={`w-4 h-4 ${color.value === "#1a1a1a" || color.value === "#C41E3A" ? "text-white" : "text-background"}`} />
                       )}
                     </button>
                   ))}
@@ -223,17 +250,17 @@ const ProductDetail = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <label className="text-sm font-medium text-foreground">Size</label>
-                  <button className="text-sm text-rose-gold hover:underline">Size Guide</button>
+                  <button className="text-sm text-accent hover:underline">Size Guide</button>
                 </div>
                 <div className="flex gap-3">
-                  {productData.sizes.map((size) => (
+                  {product.sizes.map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={`w-12 h-12 rounded-lg border-2 font-medium transition-all ${
                         selectedSize === size
-                          ? "border-rose-gold bg-rose-gold text-background"
-                          : "border-border hover:border-rose-gold text-foreground"
+                          ? "border-accent bg-accent text-accent-foreground"
+                          : "border-border hover:border-accent text-foreground"
                       }`}
                     >
                       {size}
@@ -267,7 +294,7 @@ const ProductDetail = () => {
               {/* Add to Cart & Wishlist */}
               <div className="flex gap-4 pt-4">
                 <Button 
-                  className="flex-1 h-14 bg-rose-gold hover:bg-rose-gold/90 text-background font-medium text-lg rounded-lg transition-all hover:shadow-lg hover:shadow-rose-gold/25"
+                  className="flex-1 h-14 bg-accent hover:bg-accent/90 text-accent-foreground font-medium text-lg rounded-lg transition-all hover:shadow-lg hover:shadow-accent/25"
                   disabled={!selectedSize}
                 >
                   {selectedSize ? "Add to Cart" : "Select a Size"}
@@ -276,26 +303,26 @@ const ProductDetail = () => {
                   onClick={() => setIsWishlisted(!isWishlisted)}
                   className={`w-14 h-14 border-2 rounded-lg flex items-center justify-center transition-all ${
                     isWishlisted 
-                      ? "border-rose-gold bg-rose-gold/10" 
-                      : "border-border hover:border-rose-gold"
+                      ? "border-accent bg-accent/10" 
+                      : "border-border hover:border-accent"
                   }`}
                 >
-                  <Heart className={`w-6 h-6 ${isWishlisted ? "fill-rose-gold text-rose-gold" : "text-foreground"}`} />
+                  <Heart className={`w-6 h-6 ${isWishlisted ? "fill-accent text-accent" : "text-foreground"}`} />
                 </button>
               </div>
 
               {/* Trust Badges */}
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border">
                 <div className="flex flex-col items-center text-center gap-2">
-                  <Truck className="w-5 h-5 text-rose-gold" />
+                  <Truck className="w-5 h-5 text-accent" />
                   <span className="text-xs text-muted-foreground">Free Shipping</span>
                 </div>
                 <div className="flex flex-col items-center text-center gap-2">
-                  <RotateCcw className="w-5 h-5 text-rose-gold" />
+                  <RotateCcw className="w-5 h-5 text-accent" />
                   <span className="text-xs text-muted-foreground">30-Day Returns</span>
                 </div>
                 <div className="flex flex-col items-center text-center gap-2">
-                  <Shield className="w-5 h-5 text-rose-gold" />
+                  <Shield className="w-5 h-5 text-accent" />
                   <span className="text-xs text-muted-foreground">2-Year Warranty</span>
                 </div>
               </div>
@@ -304,13 +331,26 @@ const ProductDetail = () => {
               <div className="pt-6 border-t border-border">
                 <h3 className="text-sm font-medium text-foreground mb-3">Features</h3>
                 <ul className="space-y-2">
-                  {productData.features.map((feature, index) => (
+                  {product.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Check className="w-4 h-4 text-rose-gold" />
+                      <Check className="w-4 h-4 text-accent" />
                       {feature}
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              {/* Specifications */}
+              <div className="pt-6 border-t border-border">
+                <h3 className="text-sm font-medium text-foreground mb-3">Specifications</h3>
+                <dl className="space-y-2">
+                  {Object.entries(product.specifications).map(([key, value]) => (
+                    <div key={key} className="flex text-sm">
+                      <dt className="w-1/2 text-muted-foreground">{key}</dt>
+                      <dd className="w-1/2 text-foreground">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
             </div>
           </div>
@@ -324,11 +364,11 @@ const ProductDetail = () => {
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-rose-gold text-rose-gold" />
+                    <Star key={i} className="w-5 h-5 fill-accent text-accent" />
                   ))}
                 </div>
-                <span className="text-foreground font-medium">{productData.rating}</span>
-                <span className="text-muted-foreground">({productData.reviewCount} reviews)</span>
+                <span className="text-foreground font-medium">{product.rating}</span>
+                <span className="text-muted-foreground">({product.reviewCount} reviews)</span>
               </div>
             </div>
 
@@ -346,12 +386,12 @@ const ProductDetail = () => {
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
-                          className={`w-4 h-4 ${i < review.rating ? "fill-rose-gold text-rose-gold" : "text-muted-foreground"}`}
+                          className={`w-4 h-4 ${i < review.rating ? "fill-accent text-accent" : "text-muted-foreground"}`}
                         />
                       ))}
                     </div>
                     {review.verified && (
-                      <span className="text-xs bg-rose-gold/20 text-rose-gold px-2 py-1 rounded">
+                      <span className="text-xs bg-accent/20 text-accent px-2 py-1 rounded">
                         Verified
                       </span>
                     )}
@@ -367,7 +407,7 @@ const ProductDetail = () => {
             </div>
 
             <div className="text-center mt-8">
-              <Button variant="outline" className="border-rose-gold text-rose-gold hover:bg-rose-gold hover:text-background">
+              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
                 View All Reviews
               </Button>
             </div>

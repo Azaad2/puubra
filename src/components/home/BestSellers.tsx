@@ -1,66 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Star, Heart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  hoverImage?: string;
-  rating: number;
-  reviewCount: number;
-  colors: string[];
-  isNew?: boolean;
-  isSale?: boolean;
-}
-
-const products: Product[] = [
-  {
-    id: "1",
-    name: "Silk Comfort Bralette",
-    price: 42,
-    originalPrice: 56,
-    image: "https://images.unsplash.com/photo-1616530940355-351fabd9524b?q=80&w=500&auto=format&fit=crop",
-    rating: 4.8,
-    reviewCount: 234,
-    colors: ["#F5E6D3", "#2D2D2D", "#B87E6E"],
-    isSale: true,
-  },
-  {
-    id: "2",
-    name: "Lace Detail Bra",
-    price: 48,
-    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=500&auto=format&fit=crop",
-    rating: 4.9,
-    reviewCount: 189,
-    colors: ["#F5E6D3", "#8B7355"],
-    isNew: true,
-  },
-  {
-    id: "3",
-    name: "Seamless T-Shirt Bra",
-    price: 38,
-    image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=500&auto=format&fit=crop",
-    rating: 4.7,
-    reviewCount: 312,
-    colors: ["#F5E6D3", "#2D2D2D", "#8B7355", "#B87E6E"],
-  },
-  {
-    id: "4",
-    name: "Push-Up Plunge Bra",
-    price: 52,
-    originalPrice: 65,
-    image: "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=500&auto=format&fit=crop",
-    rating: 4.6,
-    reviewCount: 156,
-    colors: ["#2D2D2D", "#8B7355"],
-    isSale: true,
-  },
-];
+import { products, Product } from "@/data/products";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -99,9 +43,11 @@ export const BestSellers = () => {
               Our most loved pieces, chosen by you
             </motion.p>
           </div>
-          <Button variant="link" className="text-accent hover:text-accent/80 mt-4 md:mt-0 text-base">
-            View All →
-          </Button>
+          <Link to="/collections/bras">
+            <Button variant="link" className="text-accent hover:text-accent/80 mt-4 md:mt-0 text-base">
+              View All →
+            </Button>
+          </Link>
         </div>
 
         <motion.div
@@ -123,6 +69,9 @@ export const BestSellers = () => {
 const ProductCard = ({ product }: { product: Product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+
+  const displayImage = product.colors[selectedColorIndex]?.image || product.images[0];
 
   return (
     <motion.div
@@ -131,47 +80,55 @@ const ProductCard = ({ product }: { product: Product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative aspect-[3/4] mb-4 overflow-hidden rounded-sm bg-muted border border-border/50 group-hover:border-accent/30 transition-colors">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {product.isNew && (
-            <Badge className="bg-foreground text-background text-xs px-2 py-1">New</Badge>
-          )}
-          {product.isSale && (
-            <Badge className="bg-accent text-accent-foreground text-xs px-2 py-1">Sale</Badge>
-          )}
-        </div>
-
-        {/* Favorite Button */}
-        <button
-          onClick={() => setIsFavorite(!isFavorite)}
-          className="absolute top-3 right-3 p-2 bg-background/90 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-background"
-        >
-          <Heart
-            className={`h-4 w-4 transition-colors ${
-              isFavorite ? "fill-accent text-accent" : "text-foreground"
-            }`}
+      <Link to={`/product/${product.slug}`}>
+        <div className="relative aspect-[3/4] mb-4 overflow-hidden rounded-sm bg-muted border border-border/50 group-hover:border-accent/30 transition-colors">
+          <img
+            src={displayImage}
+            alt={product.name}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-        </button>
+          
+          {/* Badges */}
+          <div className="absolute top-3 left-3 flex flex-col gap-2">
+            {product.isNew && (
+              <Badge className="bg-foreground text-background text-xs px-2 py-1">New</Badge>
+            )}
+            {product.isSale && (
+              <Badge className="bg-accent text-accent-foreground text-xs px-2 py-1">Sale</Badge>
+            )}
+          </div>
 
-        {/* Quick Add */}
-        <div
-          className={`absolute bottom-0 left-0 right-0 p-3 bg-background/95 backdrop-blur-sm transform transition-transform duration-300 ${
-            isHovered ? "translate-y-0" : "translate-y-full"
-          }`}
-        >
-          <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-sm">
-            <ShoppingBag className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
+          {/* Favorite Button */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setIsFavorite(!isFavorite);
+            }}
+            className="absolute top-3 right-3 p-2 bg-background/90 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-background"
+          >
+            <Heart
+              className={`h-4 w-4 transition-colors ${
+                isFavorite ? "fill-accent text-accent" : "text-foreground"
+              }`}
+            />
+          </button>
+
+          {/* Quick Add */}
+          <div
+            className={`absolute bottom-0 left-0 right-0 p-3 bg-background/95 backdrop-blur-sm transform transition-transform duration-300 ${
+              isHovered ? "translate-y-0" : "translate-y-full"
+            }`}
+          >
+            <Button 
+              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-sm"
+              onClick={(e) => e.preventDefault()}
+            >
+              <ShoppingBag className="h-4 w-4 mr-2" />
+              Quick Add
+            </Button>
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Product Info */}
       <div>
@@ -183,9 +140,11 @@ const ProductCard = ({ product }: { product: Product }) => {
           </span>
         </div>
 
-        <h3 className="font-medium text-sm md:text-base mb-1 group-hover:text-accent transition-colors">
-          {product.name}
-        </h3>
+        <Link to={`/product/${product.slug}`}>
+          <h3 className="font-medium text-sm md:text-base mb-1 group-hover:text-accent transition-colors line-clamp-2">
+            {product.name}
+          </h3>
+        </Link>
 
         {/* Price */}
         <div className="flex items-center gap-2">
@@ -199,14 +158,20 @@ const ProductCard = ({ product }: { product: Product }) => {
 
         {/* Color Swatches */}
         <div className="flex items-center gap-1.5 mt-2">
-          {product.colors.map((color, i) => (
+          {product.colors.slice(0, 4).map((color, i) => (
             <button
               key={i}
-              className="w-4 h-4 rounded-full border border-border hover:scale-110 transition-transform hover:border-accent"
-              style={{ backgroundColor: color }}
-              aria-label={`Color ${i + 1}`}
+              onClick={() => setSelectedColorIndex(i)}
+              className={`w-4 h-4 rounded-full border transition-transform hover:scale-110 ${
+                selectedColorIndex === i ? 'border-accent ring-1 ring-accent ring-offset-1 ring-offset-background' : 'border-border hover:border-accent'
+              }`}
+              style={{ backgroundColor: color.value }}
+              title={color.name}
             />
           ))}
+          {product.colors.length > 4 && (
+            <span className="text-xs text-muted-foreground">+{product.colors.length - 4}</span>
+          )}
         </div>
       </div>
     </motion.div>
