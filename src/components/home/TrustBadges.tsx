@@ -26,9 +26,9 @@ const trustBadges = [
 
 export const TrustBadges = () => {
   return (
-    <section className="py-12 md:py-16 bg-secondary/30 border-y border-border">
+    <section className="py-14 md:py-20 bg-muted/20 border-y border-border">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
           {trustBadges.map((badge, index) => (
             <motion.div
               key={badge.title}
@@ -38,11 +38,13 @@ export const TrustBadges = () => {
               transition={{ delay: index * 0.1 }}
               className="text-center"
             >
-              <badge.icon className="h-8 w-8 mx-auto mb-3 text-accent" />
-              <h3 className="font-medium text-sm md:text-base mb-1">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent/10 mb-4">
+                <badge.icon className="h-7 w-7 text-accent" />
+              </div>
+              <h3 className="font-medium text-base md:text-lg mb-1 text-foreground">
                 {badge.title}
               </h3>
-              <p className="text-muted-foreground text-xs md:text-sm">
+              <p className="text-muted-foreground text-sm">
                 {badge.description}
               </p>
             </motion.div>

@@ -74,14 +74,14 @@ export const CustomerReviews = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-secondary/50">
+    <section className="py-20 md:py-28 bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-accent text-sm font-medium tracking-widest uppercase mb-4 block"
+            className="text-accent text-sm font-medium tracking-[0.2em] uppercase mb-4 block"
           >
             Customer Love
           </motion.span>
@@ -90,7 +90,7 @@ export const CustomerReviews = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-serif text-3xl md:text-4xl font-semibold mb-4"
+            className="font-serif text-3xl md:text-5xl font-semibold mb-4"
           >
             What Our Customers Say
           </motion.h2>
@@ -169,7 +169,7 @@ export const CustomerReviews = () => {
 
 const ReviewCard = ({ review }: { review: Review }) => {
   return (
-    <div className="bg-card p-6 rounded-sm shadow-sm h-full flex flex-col border border-border">
+    <div className="bg-card p-6 rounded-sm h-full flex flex-col border border-border">
       <Quote className="h-8 w-8 text-accent/30 mb-4" />
       
       {/* Rating */}
@@ -185,7 +185,7 @@ const ReviewCard = ({ review }: { review: Review }) => {
       </div>
 
       {/* Title & Content */}
-      <h4 className="font-medium mb-2">{review.title}</h4>
+      <h4 className="font-medium mb-2 text-foreground">{review.title}</h4>
       <p className="text-muted-foreground text-sm flex-grow line-clamp-4">
         {review.content}
       </p>
@@ -204,7 +204,7 @@ const ReviewCard = ({ review }: { review: Review }) => {
         />
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-medium text-sm">{review.name}</span>
+            <span className="font-medium text-sm text-foreground">{review.name}</span>
             {review.verified && (
               <span className="text-xs text-accent">✓ Verified</span>
             )}

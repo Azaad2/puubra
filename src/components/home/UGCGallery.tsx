@@ -36,9 +36,9 @@ const ugcImages = [
 
 export const UGCGallery = () => {
   return (
-    <section className="py-16 md:py-24 bg-background overflow-hidden">
+    <section className="py-20 md:py-28 bg-background overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -46,7 +46,7 @@ export const UGCGallery = () => {
             className="flex items-center justify-center gap-2 mb-4"
           >
             <Instagram className="h-5 w-5 text-accent" />
-            <span className="text-accent text-sm font-medium tracking-widest uppercase">
+            <span className="text-accent text-sm font-medium tracking-[0.2em] uppercase">
               @shapesilk
             </span>
           </motion.div>
@@ -55,7 +55,7 @@ export const UGCGallery = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-serif text-3xl md:text-4xl font-semibold mb-4"
+            className="font-serif text-3xl md:text-5xl font-semibold mb-4"
           >
             Styled by You
           </motion.h2>
@@ -64,7 +64,7 @@ export const UGCGallery = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground max-w-md mx-auto"
+            className="text-muted-foreground max-w-md mx-auto text-lg"
           >
             Share your ShapeSilk moments with #ShapeSilkStyle for a chance to be featured
           </motion.p>
@@ -85,7 +85,7 @@ export const UGCGallery = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              className="group relative aspect-square overflow-hidden rounded-sm"
+              className="group relative aspect-square overflow-hidden rounded-sm border border-border/50 hover:border-accent/50 transition-colors"
             >
               <img
                 src={item.image}
@@ -93,9 +93,9 @@ export const UGCGallery = () => {
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
               {/* Overlay */}
-              <div className="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <Instagram className="h-6 w-6 mx-auto mb-2" />
+              <div className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="text-center text-foreground">
+                  <Instagram className="h-6 w-6 mx-auto mb-2 text-accent" />
                   <span className="text-sm font-medium">{item.username}</span>
                 </div>
               </div>
@@ -108,11 +108,11 @@ export const UGCGallery = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mt-8"
+          className="text-center mt-10"
         >
           <a
             href="#"
-            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-medium transition-colors"
+            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-medium transition-colors text-lg"
           >
             <Instagram className="h-5 w-5" />
             Follow us on Instagram

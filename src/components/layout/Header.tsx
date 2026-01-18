@@ -20,7 +20,7 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-20 md:h-24">
           {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
@@ -29,7 +29,7 @@ export const Header = () => {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[300px] sm:w-[350px]">
+            <SheetContent side="left" className="w-[300px] sm:w-[350px] bg-background">
               <nav className="flex flex-col gap-4 mt-8">
                 {navLinks.map((link) => (
                   <Link
@@ -44,22 +44,22 @@ export const Header = () => {
             </SheetContent>
           </Sheet>
 
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
+          {/* Logo - Larger and more prominent */}
+          <Link to="/" className="flex items-center">
             <img 
               src={logo} 
               alt="ShapeSilk" 
-              className="h-10 md:h-12 w-auto object-contain"
+              className="h-14 md:h-20 w-auto object-contain"
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors relative group"
+                className="text-sm font-medium text-foreground/70 hover:text-accent transition-colors relative group tracking-wide"
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full" />
@@ -73,7 +73,7 @@ export const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="text-foreground/80 hover:text-foreground"
+              className="text-foreground/70 hover:text-accent hover:bg-accent/10"
             >
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
@@ -82,7 +82,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-foreground/80 hover:text-foreground"
+              className="text-foreground/70 hover:text-accent hover:bg-accent/10"
             >
               <User className="h-5 w-5" />
               <span className="sr-only">Account</span>
@@ -91,7 +91,7 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="relative text-foreground/80 hover:text-foreground"
+              className="relative text-foreground/70 hover:text-accent hover:bg-accent/10"
             >
               <ShoppingBag className="h-5 w-5" />
               {cartItemCount > 0 && (
@@ -112,7 +112,7 @@ export const Header = () => {
               <input
                 type="search"
                 placeholder="Search for products..."
-                className="w-full pl-10 pr-4 py-2 bg-secondary border border-border rounded-sm focus:outline-none focus:ring-2 focus:ring-accent text-sm"
+                className="w-full pl-10 pr-4 py-3 bg-muted border border-border rounded-sm focus:outline-none focus:ring-2 focus:ring-accent text-sm"
                 autoFocus
               />
               <button
