@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import heroImage from "@/assets/hero/hero-lingerie.jpg";
 
 export const HeroSection = () => {
   return (
@@ -10,7 +11,7 @@ export const HeroSection = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `linear-gradient(to right, hsl(var(--background)) 0%, hsl(var(--background) / 0.7) 40%, hsl(var(--background) / 0.3) 70%, transparent 100%), 
-            url('https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1972&auto=format&fit=crop')`,
+            url('${heroImage}')`,
         }}
       />
 

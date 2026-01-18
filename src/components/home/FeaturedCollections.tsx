@@ -1,28 +1,32 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import brasCover from "@/assets/collections/bras-cover.jpg";
+import topsCover from "@/assets/collections/tops-cover.jpg";
+import pantyhoseCover from "@/assets/collections/pantyhose-cover.jpg";
+import pajamasCover from "@/assets/collections/pajamas-cover.jpg";
 
 const collections = [
   {
     name: "Bras",
-    image: "https://images.unsplash.com/photo-1616530940355-351fabd9524b?q=80&w=1635&auto=format&fit=crop",
+    image: brasCover,
     href: "/collections/bras",
     description: "Comfort meets style",
   },
   {
     name: "Tops",
-    image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1740&auto=format&fit=crop",
+    image: topsCover,
     href: "/collections/tops",
     description: "Effortless elegance",
   },
   {
     name: "Pantyhose",
-    image: "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=1665&auto=format&fit=crop",
+    image: pantyhoseCover,
     href: "/collections/pantyhose",
     description: "Seamless sophistication",
   },
   {
     name: "Pajama Sets",
-    image: "https://images.unsplash.com/photo-1615196534519-c3e7fc93e7af?q=80&w=1664&auto=format&fit=crop",
+    image: pajamasCover,
     href: "/collections/pajama-sets",
     description: "Luxurious loungewear",
   },
