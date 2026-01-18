@@ -25,7 +25,7 @@ export const AnnouncementBar = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-charcoal text-primary-foreground py-2 px-4 relative">
+    <div className="bg-gradient-rose text-white py-2.5 px-4 relative">
       <div className="container mx-auto flex items-center justify-center">
         <AnimatePresence mode="wait">
           <motion.p

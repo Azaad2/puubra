@@ -45,15 +45,15 @@ const itemVariants = {
 
 export const FeaturedCollections = () => {
   return (
-    <section className="py-16 md:py-24 bg-secondary/30">
+    <section className="py-20 md:py-28 bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="font-serif text-3xl md:text-4xl font-semibold mb-4"
+            className="font-serif text-3xl md:text-5xl font-semibold mb-4"
           >
             Shop by Category
           </motion.h2>
@@ -62,7 +62,7 @@ export const FeaturedCollections = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-muted-foreground max-w-md mx-auto"
+            className="text-muted-foreground max-w-md mx-auto text-lg"
           >
             Explore our curated collections designed for every mood and moment
           </motion.p>
@@ -79,22 +79,22 @@ export const FeaturedCollections = () => {
             <motion.div key={collection.name} variants={itemVariants}>
               <Link
                 to={collection.href}
-                className="group block relative aspect-[3/4] overflow-hidden rounded-sm"
+                className="group block relative aspect-[3/4] overflow-hidden rounded-sm border border-border/50 hover:border-accent/50 transition-colors"
               >
                 <img
                   src={collection.image}
                   alt={collection.name}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                  <h3 className="font-serif text-lg md:text-xl text-white font-medium mb-1">
+                  <h3 className="font-serif text-xl md:text-2xl text-foreground font-medium mb-1">
                     {collection.name}
                   </h3>
-                  <p className="text-white/70 text-sm hidden md:block">
+                  <p className="text-foreground/60 text-sm hidden md:block">
                     {collection.description}
                   </p>
-                  <span className="inline-flex items-center text-accent text-sm mt-2 group-hover:translate-x-2 transition-transform duration-300">
+                  <span className="inline-flex items-center text-accent text-sm mt-3 group-hover:translate-x-2 transition-transform duration-300">
                     Shop Now →
                   </span>
                 </div>

@@ -77,15 +77,15 @@ const itemVariants = {
 
 export const BestSellers = () => {
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-20 md:py-28 bg-background">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-14">
           <div>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="font-serif text-3xl md:text-4xl font-semibold mb-2"
+              className="font-serif text-3xl md:text-5xl font-semibold mb-3"
             >
               Best Sellers
             </motion.h2>
@@ -94,12 +94,12 @@ export const BestSellers = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-muted-foreground"
+              className="text-muted-foreground text-lg"
             >
               Our most loved pieces, chosen by you
             </motion.p>
           </div>
-          <Button variant="link" className="text-accent hover:text-accent/80 mt-4 md:mt-0">
+          <Button variant="link" className="text-accent hover:text-accent/80 mt-4 md:mt-0 text-base">
             View All →
           </Button>
         </div>
@@ -131,7 +131,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative aspect-[3/4] mb-4 overflow-hidden rounded-sm bg-muted">
+      <div className="relative aspect-[3/4] mb-4 overflow-hidden rounded-sm bg-muted border border-border/50 group-hover:border-accent/30 transition-colors">
         <img
           src={product.image}
           alt={product.name}
@@ -141,7 +141,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {product.isNew && (
-            <Badge className="bg-charcoal text-white text-xs px-2 py-1">New</Badge>
+            <Badge className="bg-foreground text-background text-xs px-2 py-1">New</Badge>
           )}
           {product.isSale && (
             <Badge className="bg-accent text-accent-foreground text-xs px-2 py-1">Sale</Badge>
@@ -151,22 +151,22 @@ const ProductCard = ({ product }: { product: Product }) => {
         {/* Favorite Button */}
         <button
           onClick={() => setIsFavorite(!isFavorite)}
-          className="absolute top-3 right-3 p-2 bg-white/90 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white"
+          className="absolute top-3 right-3 p-2 bg-background/90 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-background"
         >
           <Heart
             className={`h-4 w-4 transition-colors ${
-              isFavorite ? "fill-accent text-accent" : "text-charcoal"
+              isFavorite ? "fill-accent text-accent" : "text-foreground"
             }`}
           />
         </button>
 
         {/* Quick Add */}
         <div
-          className={`absolute bottom-0 left-0 right-0 p-3 bg-white/95 transform transition-transform duration-300 ${
+          className={`absolute bottom-0 left-0 right-0 p-3 bg-background/95 backdrop-blur-sm transform transition-transform duration-300 ${
             isHovered ? "translate-y-0" : "translate-y-full"
           }`}
         >
-          <Button className="w-full bg-charcoal hover:bg-charcoal/90 text-white text-sm">
+          <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-sm">
             <ShoppingBag className="h-4 w-4 mr-2" />
             Add to Cart
           </Button>
@@ -189,7 +189,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
         {/* Price */}
         <div className="flex items-center gap-2">
-          <span className="font-semibold">${product.price}</span>
+          <span className="font-semibold text-foreground">${product.price}</span>
           {product.originalPrice && (
             <span className="text-muted-foreground line-through text-sm">
               ${product.originalPrice}
@@ -202,7 +202,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           {product.colors.map((color, i) => (
             <button
               key={i}
-              className="w-4 h-4 rounded-full border border-border hover:scale-110 transition-transform"
+              className="w-4 h-4 rounded-full border border-border hover:scale-110 transition-transform hover:border-accent"
               style={{ backgroundColor: color }}
               aria-label={`Color ${i + 1}`}
             />
