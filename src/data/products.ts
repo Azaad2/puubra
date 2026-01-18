@@ -5,10 +5,11 @@ import wirelessBraMauve from "@/assets/products/wireless-bra-mauve.png";
 import wirelessBraOlive from "@/assets/products/wireless-bra-olive.png";
 import wirelessBraPink from "@/assets/products/wireless-bra-pink.png";
 import wirelessBraBlack from "@/assets/products/wireless-bra-black.png";
+import jellyBraNude from "@/assets/products/jelly-bra-nude.png";
 import jellyBraWhite from "@/assets/products/jelly-bra-white.png";
-import jellyBraPinkBlue from "@/assets/products/jelly-bra-pink-blue.png";
+import jellyBraOlive from "@/assets/products/jelly-bra-olive.png";
+import jellyBraRose from "@/assets/products/jelly-bra-rose.png";
 import jellyBraBlack from "@/assets/products/jelly-bra-black.png";
-import jellyBraWhiteDetail from "@/assets/products/jelly-bra-white-detail.png";
 
 export interface ProductColor {
   name: string;
@@ -107,16 +108,18 @@ export const products: Product[] = [
       "Decoration": "None"
     },
     images: [
+      jellyBraNude,
       jellyBraWhite,
-      jellyBraPinkBlue,
-      jellyBraBlack,
-      jellyBraWhiteDetail
+      jellyBraOlive,
+      jellyBraRose,
+      jellyBraBlack
     ],
     colors: [
+      { name: "Nude", value: "#E8C4B8", image: jellyBraNude },
       { name: "White", value: "#F5F5F0", image: jellyBraWhite },
-      { name: "Pink/Blue", value: "#8BA4B4", image: jellyBraPinkBlue },
-      { name: "Black", value: "#1a1a1a", image: jellyBraBlack },
-      { name: "White Detail", value: "#FFFAF0", image: jellyBraWhiteDetail }
+      { name: "Olive", value: "#6B7B6B", image: jellyBraOlive },
+      { name: "Rose", value: "#C08B7C", image: jellyBraRose },
+      { name: "Black", value: "#1a1a1a", image: jellyBraBlack }
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     rating: 4.7,
