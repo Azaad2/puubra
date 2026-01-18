@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
-
+import brandStoryImage from "@/assets/brand/brand-story.jpg";
 export const BrandStory = () => {
   return (
     <section className="py-20 md:py-28 bg-muted/20 overflow-hidden">
@@ -17,7 +17,7 @@ export const BrandStory = () => {
           >
             <div className="relative aspect-[4/5] rounded-sm overflow-hidden border border-border/50">
               <img
-                src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=1740&auto=format&fit=crop"
+                src={brandStoryImage}
                 alt="ShapeSilk brand story"
                 className="w-full h-full object-cover"
               />
