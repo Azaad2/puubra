@@ -1,35 +1,41 @@
 import { motion } from "framer-motion";
 import { Instagram } from "lucide-react";
+import ugc1 from "@/assets/ugc/ugc-1.jpg";
+import ugc2 from "@/assets/ugc/ugc-2.jpg";
+import ugc3 from "@/assets/ugc/ugc-3.jpg";
+import ugc4 from "@/assets/ugc/ugc-4.jpg";
+import ugc5 from "@/assets/ugc/ugc-5.jpg";
+import ugc6 from "@/assets/ugc/ugc-6.jpg";
 
 const ugcImages = [
   {
     id: "1",
-    image: "https://images.unsplash.com/photo-1597614042011-fdf56f9e7c87?q=80&w=400&auto=format&fit=crop",
+    image: ugc1,
     username: "@sarah_style",
   },
   {
     id: "2",
-    image: "https://images.unsplash.com/photo-1616530940355-351fabd9524b?q=80&w=400&auto=format&fit=crop",
+    image: ugc2,
     username: "@emilyrose",
   },
   {
     id: "3",
-    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=400&auto=format&fit=crop",
+    image: ugc3,
     username: "@jessica_joy",
   },
   {
     id: "4",
-    image: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400&auto=format&fit=crop",
+    image: ugc4,
     username: "@amanda_k",
   },
   {
     id: "5",
-    image: "https://images.unsplash.com/photo-1615196534519-c3e7fc93e7af?q=80&w=400&auto=format&fit=crop",
+    image: ugc5,
     username: "@mia_fashion",
   },
   {
     id: "6",
-    image: "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?q=80&w=400&auto=format&fit=crop",
+    image: ugc6,
     username: "@olivia_m",
   },
 ];
