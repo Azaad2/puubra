@@ -56,6 +56,7 @@ export const HeroSection = () => {
             <Button 
               size="lg" 
               className="bg-accent hover:bg-accent/90 text-accent-foreground px-10 py-7 text-base font-medium btn-elegant shadow-rose"
+              onClick={() => window.location.href = '/collections/bras'}
             >
               Shop Now
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -64,6 +65,7 @@ export const HeroSection = () => {
               variant="outline" 
               size="lg"
               className="border-foreground/30 text-foreground hover:bg-foreground/10 hover:border-foreground/50 px-10 py-7 text-base font-medium btn-elegant"
+              onClick={() => window.location.href = '/collections/bras'}
             >
               View Lookbook
             </Button>
