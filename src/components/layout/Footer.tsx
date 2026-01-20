@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/shapesilk-logo.jpeg";
+import logo from "@/assets/buubra-logo.png";
 
 const footerLinks = {
   shop: [
@@ -43,7 +43,7 @@ export const Footer = () => {
         <div className="container mx-auto px-4 py-14">
           <div className="max-w-xl mx-auto text-center">
             <h3 className="font-serif text-2xl md:text-3xl mb-3 text-foreground">
-              Join the ShapeSilk Family
+              Join the buubra Family
             </h3>
             <p className="text-muted-foreground text-base mb-6">
               Subscribe for exclusive offers, new arrivals, and 10% off your first order.
@@ -70,7 +70,7 @@ export const Footer = () => {
             <Link to="/" className="inline-block mb-4">
               <img 
                 src={logo} 
-                alt="ShapeSilk" 
+                alt="buubra" 
                 className="h-16 w-auto object-contain"
               />
             </Link>
@@ -146,11 +146,11 @@ export const Footer = () => {
           <div className="col-span-2 md:col-span-1">
             <h4 className="font-medium text-sm uppercase tracking-wider mb-4 text-accent">Contact</h4>
             <a
-              href="mailto:hello@shapesilk.com"
+              href="mailto:hello@buubra.com"
               className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
               <Mail className="h-4 w-4" />
-              hello@shapesilk.com
+              hello@buubra.com
             </a>
           </div>
         </div>
@@ -161,7 +161,7 @@ export const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-muted-foreground text-xs">
-              © {new Date().getFullYear()} ShapeSilk. All rights reserved.
+              © {new Date().getFullYear()} buubra. All rights reserved.
             </p>
             <div className="flex items-center gap-4">
               <Link
