@@ -29,6 +29,7 @@ export const PromoBanner = () => {
           <Button 
             size="lg"
             className="bg-white text-foreground hover:bg-white/90 font-medium px-10 py-6 whitespace-nowrap"
+            onClick={() => window.location.href = '/collections/bras'}
           >
             Shop Now & Unlock
           </Button>

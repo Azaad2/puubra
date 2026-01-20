@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import logo from "@/assets/buubra-logo.png";
 
 const footerLinks = {
@@ -36,6 +38,26 @@ const socialLinks = [
 const paymentMethods = ["Visa", "Mastercard", "Amex", "PayPal", "Apple Pay"];
 
 export const Footer = () => {
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setIsSubmitting(true);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    toast({
+      title: "Welcome to the buubra family!",
+      description: "Check your inbox for 10% off your first order.",
+    });
+    
+    setEmail("");
+    setIsSubmitting(false);
+  };
+
   return (
     <footer className="bg-card border-t border-border">
       {/* Newsletter Section */}
@@ -48,14 +70,21 @@ export const Footer = () => {
             <p className="text-muted-foreground text-base mb-6">
               Subscribe for exclusive offers, new arrivals, and 10% off your first order.
             </p>
-            <form className="flex gap-2">
+            <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
               <Input
                 type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="bg-muted border-border text-foreground placeholder:text-muted-foreground focus:border-accent"
               />
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium px-6 whitespace-nowrap">
-                Subscribe
+              <Button 
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium px-6 whitespace-nowrap"
+              >
+                {isSubmitting ? "..." : "Subscribe"}
               </Button>
             </form>
           </div>
