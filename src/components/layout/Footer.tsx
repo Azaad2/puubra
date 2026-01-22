@@ -26,6 +26,7 @@ const footerLinks = {
     { name: "Our Story", href: "/our-story" },
     { name: "Sustainability", href: "/sustainability" },
     { name: "Careers", href: "/careers" },
+    { name: "Journal", href: "/blog" },
   ],
 };
 
