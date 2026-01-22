@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
+import { Search, User, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 import logo from "@/assets/buubra-logo.png";
 
 const navLinks = [
@@ -16,7 +17,6 @@ const navLinks = [
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const cartItemCount = 0;
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
@@ -89,19 +89,7 @@ export const Header = () => {
               <span className="sr-only">Account</span>
             </Button>
             
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative text-foreground/70 hover:text-accent hover:bg-accent/10"
-            >
-              <ShoppingBag className="h-5 w-5" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                  {cartItemCount}
-                </span>
-              )}
-              <span className="sr-only">Cart</span>
-            </Button>
+            <CartDrawer />
           </div>
         </div>
 
