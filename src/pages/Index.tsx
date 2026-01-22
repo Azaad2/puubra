@@ -9,6 +9,7 @@ import { BrandStory } from "@/components/home/BrandStory";
 import { CustomerReviews } from "@/components/home/CustomerReviews";
 import { UGCGallery } from "@/components/home/UGCGallery";
 import { TrustBadges } from "@/components/home/TrustBadges";
+import { BlogPreview } from "@/components/home/BlogPreview";
 
 const Index = () => {
   return (
@@ -21,6 +22,7 @@ const Index = () => {
         <BestSellers />
         <PromoBanner />
         <BrandStory />
+        <BlogPreview />
         <CustomerReviews />
         <UGCGallery />
         <TrustBadges />

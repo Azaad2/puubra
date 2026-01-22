@@ -10,6 +10,7 @@ const navLinks = [
   { name: "Tops", href: "/collections/tops" },
   { name: "Pantyhose", href: "/collections/pantyhose" },
   { name: "Pajama Sets", href: "/collections/pajama-sets" },
+  { name: "Journal", href: "/blog" },
   { name: "Sale", href: "/sale" },
 ];
 
