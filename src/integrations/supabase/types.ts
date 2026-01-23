@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ugc_content: {
+        Row: {
+          created_at: string
+          creator_profile_url: string | null
+          creator_username: string
+          display_order: number
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          media_url: string
+          platform: Database["public"]["Enums"]["ugc_platform"]
+          product_id: string | null
+          thumbnail_url: string | null
+          type: Database["public"]["Enums"]["ugc_content_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          creator_profile_url?: string | null
+          creator_username: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          media_url: string
+          platform?: Database["public"]["Enums"]["ugc_platform"]
+          product_id?: string | null
+          thumbnail_url?: string | null
+          type: Database["public"]["Enums"]["ugc_content_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          creator_profile_url?: string | null
+          creator_username?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          media_url?: string
+          platform?: Database["public"]["Enums"]["ugc_platform"]
+          product_id?: string | null
+          thumbnail_url?: string | null
+          type?: Database["public"]["Enums"]["ugc_content_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +70,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      ugc_content_type: "image" | "video_upload" | "video_embed"
+      ugc_platform: "upload" | "tiktok" | "instagram" | "youtube"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +198,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      ugc_content_type: ["image", "video_upload", "video_embed"],
+      ugc_platform: ["upload", "tiktok", "instagram", "youtube"],
+    },
   },
 } as const
