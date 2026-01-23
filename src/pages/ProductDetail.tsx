@@ -1,72 +1,59 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Heart, Minus, Plus, ChevronLeft, ChevronRight, Check, Truck, RotateCcw, Shield } from "lucide-react";
+import { Star, Heart, Minus, Plus, ChevronLeft, ChevronRight, Check, Truck, RotateCcw, Shield, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { getProductBySlug, getProductById, Product } from "@/data/products";
-
-const reviews = [
-  {
-    id: 1,
-    author: "Sarah M.",
-    rating: 5,
-    date: "2 weeks ago",
-    title: "Absolutely stunning quality",
-    content: "So comfortable and the fit is perfect. I've never felt more confident. Worth every penny!",
-    verified: true
-  },
-  {
-    id: 2,
-    author: "Emma L.",
-    rating: 5,
-    date: "1 month ago",
-    title: "My new favorite",
-    content: "Beautiful design and incredibly comfortable. Already ordered two more colors!",
-    verified: true
-  },
-  {
-    id: 3,
-    author: "Jessica R.",
-    rating: 4,
-    date: "1 month ago",
-    title: "Great quality, runs slightly small",
-    content: "Love the quality and look. Just note it runs a bit small - I'd recommend sizing up if you're between sizes.",
-    verified: true
-  }
-];
+import { fetchProductByHandle, ShopifyProduct } from "@/lib/shopify";
+import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<ShopifyProduct['node'] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  const addItem = useCartStore((state) => state.addItem);
+  const cartIsLoading = useCartStore((state) => state.isLoading);
 
   useEffect(() => {
-    if (id) {
-      // Try to find by slug first, then by id
-      const foundProduct = getProductBySlug(id) || getProductById(id);
-      setProduct(foundProduct || null);
-      setSelectedImage(0);
-      setSelectedColor(0);
-      setSelectedSize(null);
-    }
+    const loadProduct = async () => {
+      if (!id) return;
+      setIsLoading(true);
+      try {
+        const shopifyProduct = await fetchProductByHandle(id);
+        setProduct(shopifyProduct);
+        setSelectedImage(0);
+        setSelectedVariantIndex(0);
+      } catch (error) {
+        console.error('Failed to fetch product:', error);
+        setProduct(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadProduct();
   }, [id]);
 
-  // When color changes, update the selected image to show the color's image
-  useEffect(() => {
-    if (product && product.colors[selectedColor]) {
-      const colorImage = product.colors[selectedColor].image;
-      const imageIndex = product.images.indexOf(colorImage);
-      if (imageIndex !== -1) {
-        setSelectedImage(imageIndex);
-      }
-    }
-  }, [selectedColor, product]);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4 flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-accent" />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -88,12 +75,59 @@ const ProductDetail = () => {
     );
   }
 
+  const images = product.images?.edges?.map(e => e.node) || [];
+  const variants = product.variants?.edges?.map(e => e.node) || [];
+  const selectedVariant = variants[selectedVariantIndex];
+  const price = selectedVariant 
+    ? parseFloat(selectedVariant.price.amount) 
+    : parseFloat(product.priceRange.minVariantPrice.amount);
+  const currencyCode = selectedVariant?.price.currencyCode || product.priceRange.minVariantPrice.currencyCode;
+
   const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % product.images.length);
+    setSelectedImage((prev) => (prev + 1) % Math.max(images.length, 1));
   };
 
   const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
+    setSelectedImage((prev) => (prev - 1 + images.length) % Math.max(images.length, 1));
+  };
+
+  const handleAddToCart = async () => {
+    if (!selectedVariant) {
+      toast.error("Please select a variant");
+      return;
+    }
+
+    if (!selectedVariant.availableForSale) {
+      toast.error("This variant is out of stock");
+      return;
+    }
+
+    setIsAddingToCart(true);
+    try {
+      // Create the ShopifyProduct wrapper format expected by cart store
+      const productWrapper: ShopifyProduct = {
+        node: product
+      };
+
+      await addItem({
+        product: productWrapper,
+        variantId: selectedVariant.id,
+        variantTitle: selectedVariant.title,
+        price: selectedVariant.price,
+        quantity,
+        selectedOptions: selectedVariant.selectedOptions || [],
+      });
+
+      toast.success("Added to cart!", { 
+        description: `${product.title} has been added to your cart.`,
+        position: "top-center"
+      });
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      toast.error("Failed to add to cart", { description: "Please try again." });
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   return (
@@ -106,9 +140,9 @@ const ProductDetail = () => {
           <nav className="text-sm text-muted-foreground mb-8">
             <Link to="/" className="hover:text-accent transition-colors">Home</Link>
             <span className="mx-2">/</span>
-            <Link to="/collections/bras" className="hover:text-accent transition-colors">Bras</Link>
+            <Link to="/collections/bras" className="hover:text-accent transition-colors">Products</Link>
             <span className="mx-2">/</span>
-            <span className="text-foreground">{product.name}</span>
+            <span className="text-foreground">{product.title}</span>
           </nav>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
@@ -117,157 +151,152 @@ const ProductDetail = () => {
               {/* Main Image */}
               <div className="relative aspect-[3/4] bg-secondary/30 rounded-lg overflow-hidden group">
                 <AnimatePresence mode="wait">
-                  <motion.img
-                    key={selectedImage}
-                    src={product.images[selectedImage]}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  {images[selectedImage] ? (
+                    <motion.img
+                      key={selectedImage}
+                      src={images[selectedImage].url}
+                      alt={images[selectedImage].altText || product.title}
+                      className="w-full h-full object-cover"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-secondary">
+                      <span className="text-muted-foreground">No image available</span>
+                    </div>
+                  )}
                 </AnimatePresence>
                 
                 {/* Navigation Arrows */}
-                <button 
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:text-accent-foreground"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button 
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:text-accent-foreground"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-
-                {/* Badges */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
-                  {product.isNew && (
-                    <div className="bg-foreground text-background px-3 py-1 text-sm font-medium rounded">
-                      NEW
-                    </div>
-                  )}
-                  {product.isSale && (
-                    <div className="bg-accent text-accent-foreground px-3 py-1 text-sm font-medium rounded">
-                      SALE
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Thumbnail Grid */}
-              <div className="grid grid-cols-4 gap-3">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImage === index 
-                        ? "border-accent" 
-                        : "border-transparent hover:border-accent/50"
-                    }`}
-                  >
-                    <img 
-                      src={image} 
-                      alt={`View ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Product Info */}
-            <div className="space-y-6">
-              {/* Title & Rating */}
-              <div>
-                <h1 className="font-serif text-3xl lg:text-4xl text-foreground mb-3">
-                  {product.name}
-                </h1>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        className={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-accent text-accent" : "text-muted-foreground"}`}
-                      />
-                    ))}
-                    <span className="text-sm text-muted-foreground ml-2">
-                      {product.rating} ({product.reviewCount} reviews)
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Price */}
-              <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-serif text-accent">${product.price}</span>
-                {product.originalPrice && (
+                {images.length > 1 && (
                   <>
-                    <span className="text-lg text-muted-foreground line-through">${product.originalPrice}</span>
-                    <span className="text-sm text-accent font-medium">
-                      Save ${product.originalPrice - product.price}
-                    </span>
+                    <button 
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:text-accent-foreground"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button 
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:text-accent-foreground"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
                   </>
                 )}
               </div>
 
-              {/* Description */}
-              <p className="text-muted-foreground leading-relaxed">
-                {product.description}
-              </p>
-
-              {/* Color Selector */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">
-                  Color: <span className="text-muted-foreground">{product.colors[selectedColor].name}</span>
-                </label>
-                <div className="flex gap-3">
-                  {product.colors.map((color, index) => (
+              {/* Thumbnail Grid */}
+              {images.length > 1 && (
+                <div className="grid grid-cols-4 gap-3">
+                  {images.map((image, index) => (
                     <button
                       key={index}
-                      onClick={() => setSelectedColor(index)}
-                      className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${
-                        selectedColor === index 
-                          ? "border-accent scale-110" 
-                          : "border-transparent hover:scale-105"
+                      onClick={() => setSelectedImage(index)}
+                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                        selectedImage === index 
+                          ? "border-accent" 
+                          : "border-transparent hover:border-accent/50"
                       }`}
-                      style={{ backgroundColor: color.value }}
-                      title={color.name}
                     >
-                      {selectedColor === index && (
-                        <Check className={`w-4 h-4 ${color.value === "#1a1a1a" || color.value === "#C41E3A" ? "text-white" : "text-background"}`} />
-                      )}
+                      <img 
+                        src={image.url} 
+                        alt={image.altText || `View ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
                     </button>
                   ))}
                 </div>
+              )}
+            </div>
+
+            {/* Product Info */}
+            <div className="space-y-6">
+              {/* Title */}
+              <div>
+                <h1 className="font-serif text-3xl lg:text-4xl text-foreground mb-3">
+                  {product.title}
+                </h1>
               </div>
 
-              {/* Size Selector */}
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <label className="text-sm font-medium text-foreground">Size</label>
-                  <button className="text-sm text-accent hover:underline">Size Guide</button>
+              {/* Price */}
+              <div className="flex items-baseline gap-3">
+                <span className="text-3xl font-serif text-accent">
+                  {currencyCode === 'USD' ? '$' : currencyCode} {price.toFixed(2)}
+                </span>
+                {!selectedVariant?.availableForSale && (
+                  <span className="text-sm text-destructive font-medium">Out of Stock</span>
+                )}
+              </div>
+
+              {/* Description */}
+              {product.description && (
+                <p className="text-muted-foreground leading-relaxed">
+                  {product.description}
+                </p>
+              )}
+
+              {/* Variant Selector */}
+              {variants.length > 1 && (
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-foreground">
+                    Variant: <span className="text-muted-foreground">{selectedVariant?.title}</span>
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {variants.map((variant, index) => (
+                      <button
+                        key={variant.id}
+                        onClick={() => setSelectedVariantIndex(index)}
+                        disabled={!variant.availableForSale}
+                        className={`px-4 py-2 rounded-lg border-2 font-medium transition-all ${
+                          selectedVariantIndex === index
+                            ? "border-accent bg-accent text-accent-foreground"
+                            : variant.availableForSale
+                            ? "border-border hover:border-accent text-foreground"
+                            : "border-border text-muted-foreground opacity-50 cursor-not-allowed"
+                        }`}
+                      >
+                        {variant.title}
+                        {!variant.availableForSale && " (Sold Out)"}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  {product.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`w-12 h-12 rounded-lg border-2 font-medium transition-all ${
-                        selectedSize === size
-                          ? "border-accent bg-accent text-accent-foreground"
-                          : "border-border hover:border-accent text-foreground"
-                      }`}
-                    >
-                      {size}
-                    </button>
+              )}
+
+              {/* Options Display */}
+              {product.options && product.options.length > 0 && product.options[0].name !== 'Title' && (
+                <div className="space-y-3">
+                  {product.options.map((option) => (
+                    <div key={option.name}>
+                      <label className="text-sm font-medium text-foreground mb-2 block">
+                        {option.name}
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {option.values.map((value) => {
+                          const isSelected = selectedVariant?.selectedOptions?.some(
+                            opt => opt.name === option.name && opt.value === value
+                          );
+                          return (
+                            <span
+                              key={value}
+                              className={`px-3 py-1 text-sm rounded border ${
+                                isSelected 
+                                  ? "border-accent bg-accent/10 text-accent" 
+                                  : "border-border text-muted-foreground"
+                              }`}
+                            >
+                              {value}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
                   ))}
                 </div>
-              </div>
+              )}
 
               {/* Quantity */}
               <div className="space-y-3">
@@ -295,9 +324,16 @@ const ProductDetail = () => {
               <div className="flex gap-4 pt-4">
                 <Button 
                   className="flex-1 h-14 bg-accent hover:bg-accent/90 text-accent-foreground font-medium text-lg rounded-lg transition-all hover:shadow-lg hover:shadow-accent/25"
-                  disabled={!selectedSize}
+                  disabled={!selectedVariant?.availableForSale || isAddingToCart || cartIsLoading}
+                  onClick={handleAddToCart}
                 >
-                  {selectedSize ? "Add to Cart" : "Select a Size"}
+                  {isAddingToCart || cartIsLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : selectedVariant?.availableForSale ? (
+                    "Add to Cart"
+                  ) : (
+                    "Out of Stock"
+                  )}
                 </Button>
                 <button 
                   onClick={() => setIsWishlisted(!isWishlisted)}
@@ -326,92 +362,8 @@ const ProductDetail = () => {
                   <span className="text-xs text-muted-foreground">2-Year Warranty</span>
                 </div>
               </div>
-
-              {/* Features */}
-              <div className="pt-6 border-t border-border">
-                <h3 className="text-sm font-medium text-foreground mb-3">Features</h3>
-                <ul className="space-y-2">
-                  {product.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Check className="w-4 h-4 text-accent" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Specifications */}
-              <div className="pt-6 border-t border-border">
-                <h3 className="text-sm font-medium text-foreground mb-3">Specifications</h3>
-                <dl className="space-y-2">
-                  {Object.entries(product.specifications).map(([key, value]) => (
-                    <div key={key} className="flex text-sm">
-                      <dt className="w-1/2 text-muted-foreground">{key}</dt>
-                      <dd className="w-1/2 text-foreground">{value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
             </div>
           </div>
-
-          {/* Reviews Section */}
-          <section className="mt-20 pt-12 border-t border-border">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="font-serif text-2xl lg:text-3xl text-foreground">
-                Customer Reviews
-              </h2>
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                  ))}
-                </div>
-                <span className="text-foreground font-medium">{product.rating}</span>
-                <span className="text-muted-foreground">({product.reviewCount} reviews)</span>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {reviews.map((review) => (
-                <motion.div
-                  key={review.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-secondary/30 rounded-lg p-6 space-y-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`w-4 h-4 ${i < review.rating ? "fill-accent text-accent" : "text-muted-foreground"}`}
-                        />
-                      ))}
-                    </div>
-                    {review.verified && (
-                      <span className="text-xs bg-accent/20 text-accent px-2 py-1 rounded">
-                        Verified
-                      </span>
-                    )}
-                  </div>
-                  <h4 className="font-medium text-foreground">{review.title}</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{review.content}</p>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{review.author}</span>
-                    <span>{review.date}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="text-center mt-8">
-              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
-                View All Reviews
-              </Button>
-            </div>
-          </section>
         </div>
       </main>
 
