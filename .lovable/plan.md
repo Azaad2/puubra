@@ -1,80 +1,94 @@
 
 
-## Plan: Fix Navigation and Scroll Behavior
+## Plan: Fix Add to Cart Functionality Across All Pages
 
 ### Problem Summary
-When clicking navigation links (e.g., Bras, Tops, Pantyhose), the page doesn't scroll to the top. Users end up viewing the new page at the same scroll position they were on the previous page, making it seem like navigation isn't working properly.
-
-### Root Cause
-React Router doesn't automatically scroll to the top of the page when navigating between routes. This is expected behavior in single-page applications (SPAs) but creates a poor user experience for e-commerce sites where each page should start at the top.
-
-### Solution: Add ScrollToTop Component
-
-Create a simple component that listens for route changes and scrolls the window to the top automatically.
+1. The Shopify store currently has **0 products** - this is why no products appear on pages that fetch from Shopify
+2. The **Collections page** (`/collections/bras`, etc.) still uses mock data from `src/data/products.ts` and has a non-functional "Quick Add" button
+3. The **BestSellers** and **ProductDetail** pages are correctly wired to Shopify but show empty states due to missing products
 
 ---
 
-## Implementation Steps
+### Phase 1: Create Shopify Products
 
-### Step 1: Create ScrollToTop Component
-Create a new file `src/components/layout/ScrollToTop.tsx` that:
-- Uses React Router's `useLocation` hook to detect route changes
-- Calls `window.scrollTo(0, 0)` whenever the pathname changes
-- Renders nothing (returns `null`) - it's a behavior-only component
+Create two products in the Shopify store to match the mock data:
 
-### Step 2: Add ScrollToTop to App.tsx
-Import and place the `ScrollToTop` component inside the `BrowserRouter` wrapper in `src/App.tsx`, before the `Routes` component. This ensures it activates on every route change throughout the app.
+**Product 1: Wireless Bra - Comfort & Lift for Women**
+- Price: $23.00
+- Colors: Red, Nude, Mauve, Olive, Pink, Black
+- Sizes: S, M, L, XL, XXL
+- Images: Upload from `src/assets/products/wireless-bra-*.png`
 
-### Step 3: Verify Consistent Header/Layout
-Ensure all pages properly account for the sticky header:
-- The header uses `sticky top-0` positioning
-- Pages correctly use `pt-24` padding on their main content
-- This is already in place for most pages
-
----
-
-## Technical Details
-
-**ScrollToTop Component Code:**
-```text
-src/components/layout/ScrollToTop.tsx
-
-- Import useEffect from React
-- Import useLocation from react-router-dom
-- Get current pathname from useLocation()
-- useEffect runs on pathname change
-- Calls window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-- Returns null (no visual output)
-```
-
-**App.tsx Change:**
-```text
-Before:
-<BrowserRouter>
-  <AppContent />
-</BrowserRouter>
-
-After:
-<BrowserRouter>
-  <ScrollToTop />
-  <AppContent />
-</BrowserRouter>
-```
+**Product 2: Stary Bliss Super Soft Jelly Bra**
+- Price: $24.00
+- Colors: Nude, White, Olive, Rose, Black
+- Sizes: S, M, L, XL, XXL
+- Images: Upload from `src/assets/products/jelly-bra-*.png`
 
 ---
 
-## Files to Modify
+### Phase 2: Update Collections Page to Use Shopify Data
+
+Refactor `src/pages/Collections.tsx` to:
+
+1. **Replace mock data import** - Remove `import { products, Product } from "@/data/products"` and use Shopify API
+2. **Add Shopify fetching** - Use `fetchShopifyProducts()` from `src/lib/shopify.ts` with `useEffect` and loading state
+3. **Update ProductCard component** - Accept `ShopifyProduct` type and display Shopify data structure
+4. **Wire Quick Add button** - Connect to `useCartStore().addItem()` with proper variant handling
+5. **Update filters** - Modify size/color filters to work with Shopify product options
+
+---
+
+### Phase 3: Technical Changes
 
 | File | Change |
 |------|--------|
-| `src/components/layout/ScrollToTop.tsx` | Create new component |
-| `src/App.tsx` | Import and add ScrollToTop component |
+| Shopify Store | Create 2 products with variants and images |
+| `src/pages/Collections.tsx` | Replace mock data with Shopify API fetching, wire Quick Add to cart store |
+| `src/data/products.ts` | Keep as fallback reference only (no active usage) |
 
 ---
 
-## Expected Result
-After this change:
-- Clicking any navigation link (Bras, Tops, Pantyhose, etc.) will immediately scroll to the top of the page
-- Users will always see the page header and main content when landing on a new page
-- Back/forward browser navigation will also scroll to top (consistent behavior)
+### Collections.tsx Changes (Detail)
+
+```text
+1. Import changes:
+   - Remove: import { products, Product } from "@/data/products"
+   - Add: import { fetchShopifyProducts, ShopifyProduct } from "@/lib/shopify"
+   - Add: import { useCartStore } from "@/stores/cartStore"
+   - Add: import { toast } from "sonner"
+
+2. State changes:
+   - Add: const [products, setProducts] = useState<ShopifyProduct[]>([])
+   - Add: const [isLoading, setIsLoading] = useState(true)
+   - Add: const [isAddingToCart, setIsAddingToCart] = useState<string | null>(null)
+
+3. Data fetching:
+   - Add useEffect to call fetchShopifyProducts() on mount
+   - Handle loading and error states
+
+4. ProductCard updates:
+   - Change prop type from Product to ShopifyProduct
+   - Map Shopify data structure (product.node.title, etc.)
+   - Add handleQuickAdd function that:
+     a. Gets first available variant
+     b. Calls addItem() from cart store
+     c. Shows toast notification
+
+5. Filter updates:
+   - Extract sizes from product.node.options
+   - Extract colors from product.node.options
+   - Filter products by checking selectedOptions
+```
+
+---
+
+### Expected Result
+
+After implementation:
+1. Products created in Shopify will appear on Home, Collections, and Product Detail pages
+2. "Quick Add" button adds the first available variant to cart
+3. "Add to Cart" button on Product Detail page adds selected variant to cart
+4. Cart badge updates immediately after adding items
+5. Checkout redirects to Shopify's secure checkout
 
