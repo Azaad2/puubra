@@ -1,94 +1,68 @@
 
 
-## Plan: Fix Add to Cart Functionality Across All Pages
+## Plan: Move Products Right Below the Hero Banner
 
-### Problem Summary
-1. The Shopify store currently has **0 products** - this is why no products appear on pages that fetch from Shopify
-2. The **Collections page** (`/collections/bras`, etc.) still uses mock data from `src/data/products.ts` and has a non-functional "Quick Add" button
-3. The **BestSellers** and **ProductDetail** pages are correctly wired to Shopify but show empty states due to missing products
+### Goal
+Reduce visitor friction by showing products immediately after the hero section, so users can see products, hit "Add to Cart," and convert without scrolling through category cards and other content first.
 
----
+### Current Homepage Order
+1. Hero Section
+2. Featured Collections (Shop by Category)
+3. Best Sellers (products)
+4. Promo Banner
+5. Brand Story
+6. Blog Preview
+7. Customer Reviews
+8. UGC Gallery
+9. Trust Badges
 
-### Phase 1: Create Shopify Products
+### New Homepage Order
+1. Hero Section
+2. **Best Sellers (products) -- moved up**
+3. **Promo Banner -- moved up (reinforces purchase intent)**
+4. Featured Collections (Shop by Category)
+5. Brand Story
+6. Blog Preview
+7. Customer Reviews
+8. UGC Gallery
+9. Trust Badges
 
-Create two products in the Shopify store to match the mock data:
+### What Changes
 
-**Product 1: Wireless Bra - Comfort & Lift for Women**
-- Price: $23.00
-- Colors: Red, Nude, Mauve, Olive, Pink, Black
-- Sizes: S, M, L, XL, XXL
-- Images: Upload from `src/assets/products/wireless-bra-*.png`
+**File: `src/pages/Index.tsx`**
+- Reorder the components so `<BestSellers />` and `<PromoBanner />` come immediately after `<HeroSection />`
+- `<FeaturedCollections />` moves below the promo banner
+- Everything else stays in the same order
 
-**Product 2: Stary Bliss Super Soft Jelly Bra**
-- Price: $24.00
-- Colors: Nude, White, Olive, Rose, Black
-- Sizes: S, M, L, XL, XXL
-- Images: Upload from `src/assets/products/jelly-bra-*.png`
+This is a single-file change -- just reordering the JSX elements. No new components or logic needed.
 
----
+### Why This Works
+- Products appear above the fold on most screens, catching visitors immediately
+- The promo banner ("Spend $75, get a free gift") sits right after products to encourage adding more to cart
+- Category browsing is still available but comes after the initial product hook
 
-### Phase 2: Update Collections Page to Use Shopify Data
+### Technical Details
 
-Refactor `src/pages/Collections.tsx` to:
-
-1. **Replace mock data import** - Remove `import { products, Product } from "@/data/products"` and use Shopify API
-2. **Add Shopify fetching** - Use `fetchShopifyProducts()` from `src/lib/shopify.ts` with `useEffect` and loading state
-3. **Update ProductCard component** - Accept `ShopifyProduct` type and display Shopify data structure
-4. **Wire Quick Add button** - Connect to `useCartStore().addItem()` with proper variant handling
-5. **Update filters** - Modify size/color filters to work with Shopify product options
-
----
-
-### Phase 3: Technical Changes
-
-| File | Change |
-|------|--------|
-| Shopify Store | Create 2 products with variants and images |
-| `src/pages/Collections.tsx` | Replace mock data with Shopify API fetching, wire Quick Add to cart store |
-| `src/data/products.ts` | Keep as fallback reference only (no active usage) |
-
----
-
-### Collections.tsx Changes (Detail)
+The only file modified is `src/pages/Index.tsx`. The `<main>` section changes from:
 
 ```text
-1. Import changes:
-   - Remove: import { products, Product } from "@/data/products"
-   - Add: import { fetchShopifyProducts, ShopifyProduct } from "@/lib/shopify"
-   - Add: import { useCartStore } from "@/stores/cartStore"
-   - Add: import { toast } from "sonner"
-
-2. State changes:
-   - Add: const [products, setProducts] = useState<ShopifyProduct[]>([])
-   - Add: const [isLoading, setIsLoading] = useState(true)
-   - Add: const [isAddingToCart, setIsAddingToCart] = useState<string | null>(null)
-
-3. Data fetching:
-   - Add useEffect to call fetchShopifyProducts() on mount
-   - Handle loading and error states
-
-4. ProductCard updates:
-   - Change prop type from Product to ShopifyProduct
-   - Map Shopify data structure (product.node.title, etc.)
-   - Add handleQuickAdd function that:
-     a. Gets first available variant
-     b. Calls addItem() from cart store
-     c. Shows toast notification
-
-5. Filter updates:
-   - Extract sizes from product.node.options
-   - Extract colors from product.node.options
-   - Filter products by checking selectedOptions
+<HeroSection />
+<FeaturedCollections />
+<BestSellers />
+<PromoBanner />
+<BrandStory />
+...
 ```
 
----
+To:
 
-### Expected Result
+```text
+<HeroSection />
+<BestSellers />
+<PromoBanner />
+<FeaturedCollections />
+<BrandStory />
+...
+```
 
-After implementation:
-1. Products created in Shopify will appear on Home, Collections, and Product Detail pages
-2. "Quick Add" button adds the first available variant to cart
-3. "Add to Cart" button on Product Detail page adds selected variant to cart
-4. Cart badge updates immediately after adding items
-5. Checkout redirects to Shopify's secure checkout
-
+No styling, logic, or component changes required.
