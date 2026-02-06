@@ -18,9 +18,9 @@ const Index = () => {
       <Header />
       <main className="flex-grow">
         <HeroSection />
-        <FeaturedCollections />
         <BestSellers />
         <PromoBanner />
+        <FeaturedCollections />
         <BrandStory />
         <BlogPreview />
         <CustomerReviews />
