@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { fetchProductByHandle, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
+import { trackViewContent, trackAddToCart } from "@/hooks/useMetaPixel";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -31,6 +32,16 @@ const ProductDetail = () => {
         setProduct(shopifyProduct);
         setSelectedImage(0);
         setSelectedVariantIndex(0);
+        // Track ViewContent event
+        if (shopifyProduct) {
+          trackViewContent({
+            content_name: shopifyProduct.title,
+            content_ids: [shopifyProduct.id],
+            content_type: 'product',
+            value: parseFloat(shopifyProduct.priceRange.minVariantPrice.amount),
+            currency: shopifyProduct.priceRange.minVariantPrice.currencyCode,
+          });
+        }
       } catch (error) {
         console.error('Failed to fetch product:', error);
         setProduct(null);
@@ -121,6 +132,15 @@ const ProductDetail = () => {
       toast.success("Added to cart!", { 
         description: `${product.title} has been added to your cart.`,
         position: "top-center"
+      });
+
+      // Track AddToCart event
+      trackAddToCart({
+        content_name: product.title,
+        content_ids: [selectedVariant.id],
+        content_type: 'product',
+        value: parseFloat(selectedVariant.price.amount) * quantity,
+        currency: selectedVariant.price.currencyCode,
       });
     } catch (error) {
       console.error('Failed to add to cart:', error);
