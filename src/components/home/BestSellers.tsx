@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { fetchShopifyProducts, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
+import { trackAddToCart } from "@/hooks/useMetaPixel";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -136,6 +137,13 @@ const ProductCard = ({ product }: { product: ShopifyProduct }) => {
       toast.success("Added to cart!", { 
         description: `${productNode.title} has been added to your cart.`,
         position: "top-center"
+      });
+      trackAddToCart({
+        content_name: productNode.title,
+        content_ids: [firstVariant.id],
+        content_type: 'product',
+        value: parseFloat(firstVariant.price.amount),
+        currency: firstVariant.price.currencyCode,
       });
     } catch (error) {
       console.error('Failed to add to cart:', error);
