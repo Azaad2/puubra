@@ -53,7 +53,7 @@ const Sustainability = () => {
           </div>
           <h1 className="font-serif text-4xl md:text-5xl mb-6">Sustainability</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            At buubra, we believe that beautiful lingerie shouldn't come at the cost of our planet. 
+            At puubra, we believe that beautiful lingerie shouldn't come at the cost of our planet. 
             We're committed to making choices that are better for you and the environment.
           </p>
         </section>
@@ -104,7 +104,7 @@ const Sustainability = () => {
               <div>
                 <h3 className="font-medium mb-3">Recycle Your Packaging</h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  All buubra packaging is recyclable. Please recycle the box, tissue paper, 
+                  All puubra packaging is recyclable. Please recycle the box, tissue paper, 
                   and any inserts through your local recycling program.
                 </p>
               </div>
@@ -133,7 +133,7 @@ const Sustainability = () => {
               Questions about our sustainability efforts?
             </p>
             <a 
-              href="mailto:hello@buubra.com" 
+              href="mailto:hello@puubra.com" 
               className="text-white font-medium underline hover:no-underline"
             >
               Get in touch →

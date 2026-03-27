@@ -103,8 +103,8 @@ const SizeGuide = () => {
             <p className="text-muted-foreground mb-4">
               Our fit specialists are here to help you find your perfect size.
             </p>
-            <a href="mailto:hello@buubra.com" className="text-accent hover:underline">
-              Contact us at hello@buubra.com
+            <a href="mailto:hello@puubra.com" className="text-accent hover:underline">
+              Contact us at hello@puubra.com
             </a>
           </section>
         </div>

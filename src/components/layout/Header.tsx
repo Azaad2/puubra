@@ -4,7 +4,7 @@ import { Search, User, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { CartDrawer } from "@/components/cart/CartDrawer";
-import logo from "@/assets/buubra-logo.png";
+import logo from "@/assets/puubra-logo.png";
 
 const navLinks = [
   { name: "Bras", href: "/collections/bras" },
@@ -49,7 +49,7 @@ export const Header = () => {
           <Link to="/" className="flex items-center">
             <img 
               src={logo} 
-              alt="buubra" 
+              alt="puubra" 
               className="h-14 md:h-20 w-auto object-contain"
             />
           </Link>

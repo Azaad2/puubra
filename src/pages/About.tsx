@@ -35,13 +35,13 @@ const About = () => {
         <section className="container mx-auto px-4 max-w-6xl mb-16">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="font-serif text-4xl md:text-5xl mb-6">About buubra</h1>
+              <h1 className="font-serif text-4xl md:text-5xl mb-6">About puubra</h1>
               <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
                 Founded with a simple mission: to create lingerie that makes every woman feel confident, 
                 comfortable, and beautiful in her own skin.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                At buubra, we believe that what you wear underneath matters. It sets the foundation for 
+                At puubra, we believe that what you wear underneath matters. It sets the foundation for 
                 how you carry yourself throughout the day. That's why we've dedicated ourselves to crafting 
                 pieces that combine elegance with everyday comfort.
               </p>
@@ -49,7 +49,7 @@ const About = () => {
             <div className="relative">
               <img 
                 src={brandStoryImage} 
-                alt="buubra brand story" 
+                alt="puubra brand story" 
                 className="rounded-lg w-full h-[400px] object-cover"
               />
               <div className="absolute -bottom-6 -left-6 bg-accent text-accent-foreground px-6 py-4 rounded-lg">

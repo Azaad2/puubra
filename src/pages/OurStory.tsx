@@ -7,7 +7,7 @@ const OurStory = () => {
     {
       year: "2020",
       title: "The Beginning",
-      description: "buubra was born from a simple frustration: finding comfortable, beautiful lingerie that didn't cost a fortune. Our founder set out to change that.",
+      description: "puubra was born from a simple frustration: finding comfortable, beautiful lingerie that didn't cost a fortune. Our founder set out to change that.",
     },
     {
       year: "2021",
@@ -22,7 +22,7 @@ const OurStory = () => {
     {
       year: "2023",
       title: "Going Global",
-      description: "buubra went international, shipping to over 50 countries. We also launched our sustainability initiative to reduce our environmental footprint.",
+      description: "puubra went international, shipping to over 50 countries. We also launched our sustainability initiative to reduce our environmental footprint.",
     },
     {
       year: "2024",
@@ -39,7 +39,7 @@ const OurStory = () => {
         <section className="container mx-auto px-4 max-w-4xl mb-16 text-center">
           <h1 className="font-serif text-4xl md:text-5xl mb-6">Our Story</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            From a small idea to a global community of confident women, here's how buubra came to be.
+            From a small idea to a global community of confident women, here's how puubra came to be.
           </p>
         </section>
 
@@ -48,7 +48,7 @@ const OurStory = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <img 
               src={brandStoryImage} 
-              alt="buubra story" 
+              alt="puubra story" 
               className="rounded-lg w-full h-[500px] object-cover"
             />
             <div>
@@ -70,7 +70,7 @@ const OurStory = () => {
                 </p>
                 <p>
                   That first collection was shared with friends who shared it with their friends. 
-                  Word spread. And buubra was born.
+                  Word spread. And puubra was born.
                 </p>
               </div>
             </div>
@@ -109,7 +109,7 @@ const OurStory = () => {
           <blockquote className="font-serif text-2xl md:text-3xl text-accent italic mb-6">
             "Every woman deserves to feel beautiful in her own skin. That's not just our tagline—it's our promise."
           </blockquote>
-          <p className="text-muted-foreground">— Founder, buubra</p>
+          <p className="text-muted-foreground">— Founder, puubra</p>
         </section>
       </main>
       <Footer />

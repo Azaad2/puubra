@@ -53,7 +53,7 @@ export const UGCGallery = () => {
           >
             <Instagram className="h-5 w-5 text-accent" />
             <span className="text-accent text-sm font-medium tracking-[0.2em] uppercase">
-              @buubra
+              @puubra
             </span>
           </motion.div>
           <motion.h2
@@ -72,7 +72,7 @@ export const UGCGallery = () => {
             transition={{ delay: 0.2 }}
             className="text-muted-foreground max-w-md mx-auto text-lg"
           >
-            Share your buubra moments with #buubraStyle for a chance to be featured
+            Share your puubra moments with #puubraStyle for a chance to be featured
           </motion.p>
         </div>
 

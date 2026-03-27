@@ -16,7 +16,7 @@ export const BlogPreview = () => {
               The Journal
             </h2>
             <p className="text-muted-foreground">
-              Style tips, care guides, and stories from buubra
+              Style tips, care guides, and stories from puubra
             </p>
           </div>
           <Link 

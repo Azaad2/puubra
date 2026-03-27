@@ -7,7 +7,7 @@ const Careers = () => {
   const benefits = [
     { icon: Heart, title: "Health & Wellness", description: "Comprehensive medical, dental, and vision coverage" },
     { icon: Coffee, title: "Flexible Work", description: "Remote-friendly with flexible hours" },
-    { icon: Sparkles, title: "Product Perks", description: "Generous employee discount on all buubra products" },
+    { icon: Sparkles, title: "Product Perks", description: "Generous employee discount on all puubra products" },
     { icon: Plane, title: "PTO", description: "Unlimited paid time off and paid parental leave" },
     { icon: Users, title: "Team Culture", description: "Regular team events and retreats" },
     { icon: Briefcase, title: "Growth", description: "Professional development budget and mentorship" },
@@ -58,7 +58,7 @@ const Careers = () => {
           <div className="container mx-auto px-4 max-w-4xl text-center">
             <h2 className="font-serif text-3xl mb-6">Our Culture</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
-              At buubra, we believe in collaboration, creativity, and celebrating each other's wins. 
+              At puubra, we believe in collaboration, creativity, and celebrating each other's wins. 
               We're a diverse team united by our passion for making women feel confident and beautiful.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
@@ -111,7 +111,7 @@ const Careers = () => {
                 </div>
                 <Button 
                   variant="outline"
-                  onClick={() => window.location.href = `mailto:careers@buubra.com?subject=Application: ${position.title}`}
+                  onClick={() => window.location.href = `mailto:careers@puubra.com?subject=Application: ${position.title}`}
                 >
                   Apply Now
                 </Button>
@@ -125,11 +125,11 @@ const Careers = () => {
           <div className="bg-card p-8 rounded-lg border border-border">
             <h2 className="font-serif text-2xl mb-4">Don't See the Right Fit?</h2>
             <p className="text-muted-foreground mb-6">
-              We're always looking for talented individuals. Send us your resume and tell us how you'd like to contribute to buubra.
+              We're always looking for talented individuals. Send us your resume and tell us how you'd like to contribute to puubra.
             </p>
             <Button 
               className="bg-accent hover:bg-accent/90 text-accent-foreground"
-              onClick={() => window.location.href = 'mailto:careers@buubra.com?subject=General Application'}
+              onClick={() => window.location.href = 'mailto:careers@puubra.com?subject=General Application'}
             >
               Send Your Resume
             </Button>

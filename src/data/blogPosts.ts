@@ -18,7 +18,7 @@ export const blogPosts: BlogPost[] = [
     title: "How to Find Your Perfect Bra Size",
     excerpt: "Discover the secrets to finding a bra that fits like a dream. Our comprehensive guide walks you through measuring techniques and fit tips.",
     content: `
-      <p>Finding the perfect bra size is a journey that many women struggle with. Studies show that up to 80% of women are wearing the wrong bra size. At buubra, we believe that every woman deserves to feel comfortable and confident in her lingerie.</p>
+      <p>Finding the perfect bra size is a journey that many women struggle with. Studies show that up to 80% of women are wearing the wrong bra size. At puubra, we believe that every woman deserves to feel comfortable and confident in her lingerie.</p>
       
       <h2>Step 1: Measure Your Band Size</h2>
       <p>Using a soft measuring tape, measure around your ribcage, just under your bust. Make sure the tape is snug but not too tight. Round to the nearest whole number. If the number is even, that's your band size. If it's odd, round up to the next even number.</p>
@@ -80,7 +80,7 @@ export const blogPosts: BlogPost[] = [
     title: "5 Ways to Care for Your Lingerie",
     excerpt: "Extend the life of your favorite pieces with these essential care tips. Your delicates deserve the best treatment.",
     content: `
-      <p>Quality lingerie is an investment, and with proper care, your favorite pieces can last for years. Here are our top tips for keeping your buubra collection in pristine condition.</p>
+      <p>Quality lingerie is an investment, and with proper care, your favorite pieces can last for years. Here are our top tips for keeping your puubra collection in pristine condition.</p>
       
       <h2>1. Hand Wash When Possible</h2>
       <p>The gentlest way to clean your bras is by hand. Use lukewarm water and a mild detergent designed for delicates. Gently swirl and squeeze—never wring or twist.</p>
@@ -143,7 +143,7 @@ export const blogPosts: BlogPost[] = [
       <p>Cheap, mass-produced lingerie often ends up in landfills within months. The environmental cost of this cycle is enormous—from water usage to textile waste.</p>
       
       <h2>Our Commitment to Sustainability</h2>
-      <p>At buubra, we're committed to responsible manufacturing. Our pieces are designed to last, made with durable materials and timeless designs that won't go out of style.</p>
+      <p>At puubra, we're committed to responsible manufacturing. Our pieces are designed to last, made with durable materials and timeless designs that won't go out of style.</p>
       
       <h2>Making Conscious Choices</h2>
       <ul>
@@ -167,7 +167,7 @@ export const blogPosts: BlogPost[] = [
     title: "Behind the Scenes: Our Design Process",
     excerpt: "Take a peek behind the curtain at how we create lingerie that combines comfort, support, and style.",
     content: `
-      <p>Every buubra piece begins with a simple question: How can we make women feel more comfortable and confident? Here's a glimpse into our design process.</p>
+      <p>Every puubra piece begins with a simple question: How can we make women feel more comfortable and confident? Here's a glimpse into our design process.</p>
       
       <h2>Research & Inspiration</h2>
       <p>We start by listening to our customers. What do they love? What frustrates them about existing options? This feedback shapes every design decision.</p>

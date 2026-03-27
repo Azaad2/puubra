@@ -20,10 +20,10 @@ const Blog = () => {
         <section className="bg-card border-b border-border py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-4 text-foreground">
-              The buubra Journal
+              The puubra Journal
             </h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Style tips, care guides, and behind-the-scenes stories from the world of buubra.
+              Style tips, care guides, and behind-the-scenes stories from the world of puubra.
             </p>
           </div>
         </section>
