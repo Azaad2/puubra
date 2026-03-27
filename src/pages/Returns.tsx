@@ -71,7 +71,7 @@ const Returns = () => {
                 <div className="w-8 h-8 bg-accent text-accent-foreground rounded-full flex items-center justify-center font-medium flex-shrink-0">1</div>
                 <div>
                   <h3 className="font-medium mb-1">Start Your Return</h3>
-                  <p className="text-muted-foreground text-sm">Email us at hello@buubra.com with your order number and reason for return.</p>
+                  <p className="text-muted-foreground text-sm">Email us at hello@puubra.com with your order number and reason for return.</p>
                 </div>
               </div>
               <div className="flex gap-4 items-start">
@@ -104,8 +104,8 @@ const Returns = () => {
             <p className="text-muted-foreground mb-4">
               Our customer care team is happy to help.
             </p>
-            <a href="mailto:hello@buubra.com" className="text-accent hover:underline">
-              hello@buubra.com
+            <a href="mailto:hello@puubra.com" className="text-accent hover:underline">
+              hello@puubra.com
             </a>
           </section>
         </div>

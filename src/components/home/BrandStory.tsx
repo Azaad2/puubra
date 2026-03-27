@@ -18,7 +18,7 @@ export const BrandStory = () => {
             <div className="relative aspect-[4/5] rounded-sm overflow-hidden border border-border/50">
               <img
                 src={brandStoryImage}
-                alt="buubra brand story"
+                alt="puubra brand story"
                 className="w-full h-full object-cover"
               />
               {/* Video Play Button Overlay */}
@@ -49,7 +49,7 @@ export const BrandStory = () => {
             </h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed text-lg">
               <p>
-                At buubra, we believe every woman deserves to feel confident, 
+                At puubra, we believe every woman deserves to feel confident, 
                 comfortable, and beautiful in her own skin. Our journey began with 
                 a simple mission: to create lingerie that doesn't compromise on 
                 comfort or style.

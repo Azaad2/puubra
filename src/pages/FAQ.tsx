@@ -39,7 +39,7 @@ const FAQ = () => {
         },
         {
           q: "How do I exchange an item?",
-          a: "Email us at hello@buubra.com with your order number and the item/size you'd like to exchange for. We'll guide you through the process.",
+          a: "Email us at hello@puubra.com with your order number and the item/size you'd like to exchange for. We'll guide you through the process.",
         },
         {
           q: "How long do refunds take?",
@@ -68,7 +68,7 @@ const FAQ = () => {
       title: "Product Care",
       questions: [
         {
-          q: "How should I wash my buubra products?",
+          q: "How should I wash my puubra products?",
           a: "We recommend hand washing in cold water with mild detergent. Lay flat to dry. Avoid wringing or twisting. For best results, use a lingerie bag if machine washing.",
         },
         {
@@ -134,8 +134,8 @@ const FAQ = () => {
             <p className="text-muted-foreground mb-4">
               We're here to help! Reach out to our customer care team.
             </p>
-            <a href="mailto:hello@buubra.com" className="text-accent hover:underline">
-              hello@buubra.com
+            <a href="mailto:hello@puubra.com" className="text-accent hover:underline">
+              hello@puubra.com
             </a>
           </section>
         </div>
