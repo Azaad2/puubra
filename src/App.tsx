@@ -21,6 +21,7 @@ import Sale from "./pages/Sale";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
+import JellyBraPreOrder from "./pages/JellyBraPreOrder";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const AppContent = () => {
       <Route path="/sale" element={<Sale />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/blog/:slug" element={<BlogPost />} />
+      <Route path="/jelly-bra" element={<JellyBraPreOrder />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -9,6 +9,7 @@ import { BrandStory } from "@/components/home/BrandStory";
 import { CustomerReviews } from "@/components/home/CustomerReviews";
 import { UGCGallery } from "@/components/home/UGCGallery";
 import { TrustBadges } from "@/components/home/TrustBadges";
+import { JellyBraPromo } from "@/components/home/JellyBraPromo";
 import { BlogPreview } from "@/components/home/BlogPreview";
 
 const Index = () => {
@@ -18,6 +19,7 @@ const Index = () => {
       <Header />
       <main className="flex-grow">
         <HeroSection />
+        <JellyBraPromo />
         <BestSellers />
         <PromoBanner />
         <FeaturedCollections />
