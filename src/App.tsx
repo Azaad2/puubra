@@ -21,6 +21,7 @@ import Sale from "./pages/Sale";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
+import JellyBraPreOrder from "./pages/JellyBraPreOrder";
 
 const queryClient = new QueryClient();
 
