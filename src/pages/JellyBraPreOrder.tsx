@@ -16,7 +16,7 @@ import jellyBraOlive from "@/assets/products/jelly-bra-olive.png";
 import jellyBraRose from "@/assets/products/jelly-bra-rose.png";
 import jellyBraBlack from "@/assets/products/jelly-bra-black.png";
 
-const JELLY_PRODUCT_HANDLE = "stary-bliss-jelly-bra";
+
 
 const colorOptions = [
   { name: "Nude",  swatch: "#E8C4B8", image: jellyBraNude  },
