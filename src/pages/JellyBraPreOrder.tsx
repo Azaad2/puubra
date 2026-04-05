@@ -7,8 +7,6 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useCartStore } from "@/stores/cartStore";
-import { fetchProductByHandle, ShopifyProduct } from "@/lib/shopify";
 import { trackViewContent, trackAddToCart, trackInitiateCheckout } from "@/hooks/useMetaPixel";
 
 // Product images
