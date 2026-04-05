@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Search, User, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { CartDrawer } from "@/components/cart/CartDrawer";
+import { ShoppingCart } from "lucide-react";
 import logo from "@/assets/puubra-logo.png";
 
 const navLinks = [
@@ -89,7 +89,14 @@ export const Header = () => {
               <span className="sr-only">Account</span>
             </Button>
             
-            <CartDrawer />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative text-foreground/70 hover:text-accent hover:bg-accent/10"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              <span className="sr-only">Cart</span>
+            </Button>
           </div>
         </div>
 
