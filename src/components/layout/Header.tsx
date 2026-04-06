@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { Search, User, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
 import logo from "@/assets/puubra-logo.png";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 
 const navLinks = [
   { name: "Bras", href: "/collections/bras" },
@@ -89,14 +89,7 @@ export const Header = () => {
               <span className="sr-only">Account</span>
             </Button>
             
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative text-foreground/70 hover:text-accent hover:bg-accent/10"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Cart</span>
-            </Button>
+            <CartDrawer />
           </div>
         </div>
 
