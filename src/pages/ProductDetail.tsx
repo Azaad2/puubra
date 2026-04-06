@@ -1,20 +1,35 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Minus, Plus, ChevronLeft, ChevronRight, Truck, RotateCcw, Shield } from "lucide-react";
+import { Heart, Minus, Plus, ChevronLeft, ChevronRight, Truck, RotateCcw, Shield, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { products } from "@/data/products";
+import { useShopifyProduct } from "@/hooks/useShopifyProducts";
+import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const product = useMemo(() => products.find(p => p.slug === id || p.id === id), [id]);
+  const { data: product, isLoading: productLoading } = useShopifyProduct(id || '');
+  const addItem = useCartStore(state => state.addItem);
+  const cartLoading = useCartStore(state => state.isLoading);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  if (productLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16 flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -34,17 +49,26 @@ const ProductDetail = () => {
     );
   }
 
-  const images = product.images;
-  const displayImage = product.colors[selectedColorIndex]?.image || images[selectedImage];
+  const images = product.node.images.edges.map(e => e.node);
+  const variants = product.node.variants.edges.map(e => e.node);
+  const selectedVariant = variants[selectedVariantIndex];
+  const price = selectedVariant ? parseFloat(selectedVariant.price.amount) : 0;
+  const currency = selectedVariant?.price.currencyCode || 'USD';
 
   const nextImage = () => setSelectedImage((prev) => (prev + 1) % images.length);
   const prevImage = () => setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
 
-  const handleAddToCart = () => {
-    toast.success("Added to cart!", {
-      description: `${product.name} has been added to your cart.`,
-      position: "top-center",
+  const handleAddToCart = async () => {
+    if (!selectedVariant) return;
+    await addItem({
+      product,
+      variantId: selectedVariant.id,
+      variantTitle: selectedVariant.title,
+      price: selectedVariant.price,
+      quantity,
+      selectedOptions: selectedVariant.selectedOptions || [],
     });
+    toast.success("Added to cart!", { description: `${product.node.title} has been added to your cart.`, position: "top-center" });
   };
 
   return (
@@ -57,7 +81,7 @@ const ProductDetail = () => {
             <span className="mx-2">/</span>
             <Link to="/collections/bras" className="hover:text-accent transition-colors">Products</Link>
             <span className="mx-2">/</span>
-            <span className="text-foreground">{product.name}</span>
+            <span className="text-foreground">{product.node.title}</span>
           </nav>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
@@ -66,9 +90,9 @@ const ProductDetail = () => {
               <div className="relative aspect-[3/4] bg-secondary/30 rounded-lg overflow-hidden group">
                 <AnimatePresence mode="wait">
                   <motion.img
-                    key={selectedImage + "-" + selectedColorIndex}
-                    src={displayImage}
-                    alt={product.name}
+                    key={selectedImage}
+                    src={images[selectedImage]?.url || '/placeholder.svg'}
+                    alt={images[selectedImage]?.altText || product.node.title}
                     className="w-full h-full object-cover"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -91,7 +115,7 @@ const ProductDetail = () => {
                 <div className="grid grid-cols-4 gap-3">
                   {images.map((image, index) => (
                     <button key={index} onClick={() => setSelectedImage(index)} className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${selectedImage === index ? "border-accent" : "border-transparent hover:border-accent/50"}`}>
-                      <img src={image} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
+                      <img src={image.url} alt={image.altText || `View ${index + 1}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
@@ -100,36 +124,33 @@ const ProductDetail = () => {
 
             {/* Product Info */}
             <div className="space-y-6">
-              <h1 className="font-serif text-3xl lg:text-4xl text-foreground mb-3">{product.name}</h1>
+              <h1 className="font-serif text-3xl lg:text-4xl text-foreground mb-3">{product.node.title}</h1>
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-serif text-accent">${product.price}</span>
-                {product.originalPrice && <span className="text-lg text-muted-foreground line-through">${product.originalPrice}</span>}
+                <span className="text-3xl font-serif text-accent">{currency === 'USD' ? '$' : currency}{price.toFixed(2)}</span>
               </div>
-              <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+              <p className="text-muted-foreground leading-relaxed">{product.node.description}</p>
 
-              {/* Color Selector */}
-              {product.colors.length > 0 && (
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-foreground">Color: <span className="text-muted-foreground">{product.colors[selectedColorIndex]?.name}</span></label>
-                  <div className="flex gap-2">
-                    {product.colors.map((color, i) => (
-                      <button key={i} onClick={() => setSelectedColorIndex(i)} className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColorIndex === i ? "border-accent ring-2 ring-accent ring-offset-2 ring-offset-background" : "border-border hover:border-accent"}`} style={{ backgroundColor: color.value }} title={color.name} />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Size Selector */}
-              {product.sizes.length > 0 && (
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-foreground">Size</label>
+              {/* Variant/Option Selector */}
+              {product.node.options.map((option) => (
+                <div key={option.name} className="space-y-3">
+                  <label className="text-sm font-medium text-foreground">{option.name}</label>
                   <div className="flex flex-wrap gap-3">
-                    {product.sizes.map((size) => (
-                      <button key={size} className="px-4 py-2 rounded-lg border-2 border-border hover:border-accent text-foreground font-medium transition-all">{size}</button>
-                    ))}
+                    {option.values.map((value) => {
+                      const variantIndex = variants.findIndex(v => v.selectedOptions.some(o => o.name === option.name && o.value === value));
+                      const isSelected = selectedVariant?.selectedOptions.some(o => o.name === option.name && o.value === value);
+                      return (
+                        <button
+                          key={value}
+                          onClick={() => { if (variantIndex >= 0) setSelectedVariantIndex(variantIndex); }}
+                          className={`px-4 py-2 rounded-lg border-2 font-medium transition-all ${isSelected ? "border-accent bg-accent/10 text-accent" : "border-border hover:border-accent text-foreground"}`}
+                        >
+                          {value}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-              )}
+              ))}
 
               {/* Quantity */}
               <div className="space-y-3">
@@ -143,7 +164,9 @@ const ProductDetail = () => {
 
               {/* Add to Cart */}
               <div className="flex gap-4 pt-4">
-                <Button className="flex-1 h-14 bg-accent hover:bg-accent/90 text-accent-foreground font-medium text-lg rounded-lg" onClick={handleAddToCart}>Add to Cart</Button>
+                <Button className="flex-1 h-14 bg-accent hover:bg-accent/90 text-accent-foreground font-medium text-lg rounded-lg" onClick={handleAddToCart} disabled={cartLoading || !selectedVariant?.availableForSale}>
+                  {cartLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : selectedVariant?.availableForSale ? "Add to Cart" : "Sold Out"}
+                </Button>
                 <button onClick={() => setIsWishlisted(!isWishlisted)} className={`w-14 h-14 border-2 rounded-lg flex items-center justify-center transition-all ${isWishlisted ? "border-accent bg-accent/10" : "border-border hover:border-accent"}`}>
                   <Heart className={`w-6 h-6 ${isWishlisted ? "fill-accent text-accent" : "text-foreground"}`} />
                 </button>
