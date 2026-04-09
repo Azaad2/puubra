@@ -3,9 +3,9 @@ import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const announcements = [
-  "Free Shipping on Orders Over $50",
-  "Buy 2 Save 15% | Buy 5 Save 30%",
-  "New Arrivals Just Dropped ✨",
+  "🔥 Jelly Bra Pre-Order Now Live — 15% Off Launch Price",
+  "Free Shipping on Orders Over $50 | Buy 2 Save 15%",
+  "New: Stary Bliss Jelly Bra — Wire-Free Lift ✨",
 ];
 
 export const AnnouncementBar = () => {

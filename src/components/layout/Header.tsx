@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { Search, User, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/puubra-logo.png";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import logo from "@/assets/puubra-logo.png";
 
 const navLinks = [
   { name: "Bras", href: "/collections/bras" },
+  { name: "Jelly Bra 🔥", href: "/jelly-bra" },
   { name: "Tops", href: "/collections/tops" },
   { name: "Pantyhose", href: "/collections/pantyhose" },
   { name: "Pajama Sets", href: "/collections/pajama-sets" },
