@@ -7,6 +7,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useCartStore } from "@/stores/cartStore";
+import { fetchProductByHandle, ShopifyProduct } from "@/lib/shopify";
 import { trackViewContent, trackAddToCart, trackInitiateCheckout } from "@/hooks/useMetaPixel";
 
 // Product images
@@ -16,7 +18,7 @@ import jellyBraOlive from "@/assets/products/jelly-bra-olive.png";
 import jellyBraRose from "@/assets/products/jelly-bra-rose.png";
 import jellyBraBlack from "@/assets/products/jelly-bra-black.png";
 
-
+const JELLY_PRODUCT_HANDLE = "stary-bliss-jelly-bra";
 
 const colorOptions = [
   { name: "Nude",  swatch: "#E8C4B8", image: jellyBraNude  },
@@ -130,7 +132,45 @@ const JellyBraPreOrder = () => {
   const [isSubmitting, setIsSubmitting]   = useState(false);
   const [submitted, setSubmitted]         = useState(false);
 
-  const price = "24.00";
+  // Shopify product
+  const [shopifyProduct, setShopifyProduct] = useState<ShopifyProduct["node"] | null>(null);
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+
+  const addItem = useCartStore((s) => s.addItem);
+  const getCheckoutUrl = useCartStore((s) => s.getCheckoutUrl);
+
+  // Fetch Shopify product on mount
+  useEffect(() => {
+    fetchProductByHandle(JELLY_PRODUCT_HANDLE)
+      .then((p) => {
+        if (p) {
+          setShopifyProduct(p);
+          const firstVariant = p.variants?.edges?.[0]?.node;
+          if (firstVariant) setSelectedVariantId(firstVariant.id);
+          trackViewContent({
+            content_name: p.title,
+            content_ids: [p.id],
+            content_type: "product",
+            value: parseFloat(p.priceRange.minVariantPrice.amount),
+            currency: p.priceRange.minVariantPrice.currencyCode,
+          });
+        }
+      })
+      .catch(() => {/* fallback to static data */});
+  }, []);
+
+  // Sync variant when size changes
+  useEffect(() => {
+    if (!shopifyProduct || !selectedSize) return;
+    const match = shopifyProduct.variants?.edges?.find(
+      (e) => e.node.selectedOptions?.some((o) => o.name === "Size" && o.value === selectedSize)
+    );
+    if (match) setSelectedVariantId(match.node.id);
+  }, [selectedSize, shopifyProduct]);
+
+  const price = shopifyProduct
+    ? parseFloat(shopifyProduct.priceRange.minVariantPrice.amount).toFixed(2)
+    : "24.00";
 
   const validate = () => {
     if (!firstName.trim() || !lastName.trim()) { toast({ title: "Please enter your full name.", variant: "destructive" }); return false; }
@@ -145,7 +185,37 @@ const JellyBraPreOrder = () => {
     setIsSubmitting(true);
 
     try {
-      // Save lead data
+      // Add to Shopify cart if variant available
+      if (shopifyProduct && selectedVariantId) {
+        await addItem({
+          product: { node: shopifyProduct } as ShopifyProduct,
+          variantId: selectedVariantId,
+          variantTitle: `${selectedColor.name} / ${selectedSize}`,
+          price: shopifyProduct.priceRange.minVariantPrice,
+          quantity: 1,
+          selectedOptions: [
+            { name: "Color", value: selectedColor.name },
+            { name: "Size",  value: selectedSize },
+          ],
+        });
+
+        trackAddToCart({
+          content_name: shopifyProduct.title,
+          content_ids: [shopifyProduct.id],
+          content_type: "product",
+          value: parseFloat(shopifyProduct.priceRange.minVariantPrice.amount),
+          currency: shopifyProduct.priceRange.minVariantPrice.currencyCode,
+        });
+
+        trackInitiateCheckout({
+          content_ids: [shopifyProduct.id],
+          num_items: 1,
+          value: parseFloat(shopifyProduct.priceRange.minVariantPrice.amount),
+          currency: shopifyProduct.priceRange.minVariantPrice.currencyCode,
+        });
+      }
+
+      // Save lead data (hook to Klaviyo/Mailchimp here)
       console.info("Puubra pre-order lead:", {
         firstName, lastName, email, country,
         color: selectedColor.name,
@@ -153,24 +223,18 @@ const JellyBraPreOrder = () => {
         ts: new Date().toISOString(),
       });
 
-      trackAddToCart({
-        content_name: "Stary Bliss Jelly Bra",
-        content_ids: ["jelly-bra"],
-        content_type: "product",
-        value: parseFloat(price),
-        currency: "USD",
-      });
-
-      trackInitiateCheckout({
-        content_ids: ["jelly-bra"],
-        num_items: 1,
-        value: parseFloat(price),
-        currency: "USD",
-      });
-
       setSubmitted(true);
 
-      toast({ title: "Pre-order submitted!", description: "We'll notify you when your order is ready." });
+      // Redirect to checkout after brief moment
+      setTimeout(() => {
+        const checkoutUrl = getCheckoutUrl();
+        if (checkoutUrl) {
+          window.location.href = checkoutUrl;
+        } else {
+          window.location.href = "https://peuvfx-1e.myshopify.com/cart";
+        }
+      }, 1800);
+
     } catch (err) {
       console.error(err);
       toast({ title: "Something went wrong. Please try again.", variant: "destructive" });
