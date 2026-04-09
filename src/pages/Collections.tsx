@@ -1,26 +1,23 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, Heart, ShoppingBag, Filter, X, ChevronDown } from "lucide-react";
+import { Heart, ShoppingBag, Filter, X, ChevronDown } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Checkbox } from "@/components/ui/checkbox";
-import { products, Product } from "@/data/products";
+import { fetchShopifyProducts, ShopifyProduct } from "@/lib/shopify";
+import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
 
-type SortOption = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
+type SortOption = "featured" | "price-asc" | "price-desc";
 
 const sortOptions: { value: SortOption; label: string }[] = [
   { value: "featured", label: "Featured" },
   { value: "price-asc", label: "Price: Low to High" },
   { value: "price-desc", label: "Price: High to Low" },
-  { value: "newest", label: "Newest" },
-  { value: "rating", label: "Top Rated" },
 ];
-
-const allSizes = ["S", "M", "L", "XL", "XXL"];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -38,96 +35,55 @@ const itemVariants = {
 const Collections = () => {
   const { category } = useParams();
   const [sortBy, setSortBy] = useState<SortOption>("featured");
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [products, setProducts] = useState<ShopifyProduct[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Get unique colors from all products
-  const allColors = useMemo(() => {
-    const colorMap = new Map<string, { name: string; value: string }>();
-    products.forEach(product => {
-      product.colors.forEach(color => {
-        if (!colorMap.has(color.name)) {
-          colorMap.set(color.name, { name: color.name, value: color.value });
-        }
-      });
-    });
-    return Array.from(colorMap.values());
-  }, []);
+  useEffect(() => {
+    const load = async () => {
+      setIsLoading(true);
+      try {
+        const query = category ? `product_type:${category}` : undefined;
+        const data = await fetchShopifyProducts(50, query);
+        setProducts(data);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    load();
+  }, [category]);
 
-  // Filter and sort products
-  const filteredProducts = useMemo(() => {
-    let result = [...products];
-
-    // Filter by size
-    if (selectedSizes.length > 0) {
-      result = result.filter(product =>
-        selectedSizes.some(size => product.sizes.includes(size))
-      );
-    }
-
-    // Filter by color
-    if (selectedColors.length > 0) {
-      result = result.filter(product =>
-        selectedColors.some(colorName =>
-          product.colors.some(c => c.name === colorName)
-        )
-      );
-    }
-
-    // Sort
+  const sortedProducts = useMemo(() => {
+    const result = [...products];
     switch (sortBy) {
       case "price-asc":
-        result.sort((a, b) => a.price - b.price);
+        result.sort((a, b) =>
+          parseFloat(a.node.priceRange.minVariantPrice.amount) -
+          parseFloat(b.node.priceRange.minVariantPrice.amount)
+        );
         break;
       case "price-desc":
-        result.sort((a, b) => b.price - a.price);
-        break;
-      case "newest":
-        result.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-        break;
-      case "rating":
-        result.sort((a, b) => b.rating - a.rating);
+        result.sort((a, b) =>
+          parseFloat(b.node.priceRange.minVariantPrice.amount) -
+          parseFloat(a.node.priceRange.minVariantPrice.amount)
+        );
         break;
       default:
-        // Featured - keep original order
         break;
     }
-
     return result;
-  }, [selectedSizes, selectedColors, sortBy]);
+  }, [products, sortBy]);
 
-  const toggleSize = (size: string) => {
-    setSelectedSizes(prev =>
-      prev.includes(size)
-        ? prev.filter(s => s !== size)
-        : [...prev, size]
-    );
-  };
-
-  const toggleColor = (colorName: string) => {
-    setSelectedColors(prev =>
-      prev.includes(colorName)
-        ? prev.filter(c => c !== colorName)
-        : [...prev, colorName]
-    );
-  };
-
-  const clearFilters = () => {
-    setSelectedSizes([]);
-    setSelectedColors([]);
-  };
-
-  const hasActiveFilters = selectedSizes.length > 0 || selectedColors.length > 0;
-
-  const categoryTitle = category 
+  const categoryTitle = category
     ? category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')
     : "All Products";
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           {/* Breadcrumb */}
@@ -152,80 +108,12 @@ const Collections = () => {
               transition={{ delay: 0.1 }}
               className="text-muted-foreground text-lg"
             >
-              {filteredProducts.length} products
+              {isLoading ? "Loading..." : `${sortedProducts.length} products`}
             </motion.p>
           </div>
 
-          {/* Toolbar */}
-          <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-border">
-            {/* Mobile Filter Button */}
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" className="md:hidden border-border">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filter
-                  {hasActiveFilters && (
-                    <Badge className="ml-2 bg-accent text-accent-foreground text-xs">
-                      {selectedSizes.length + selectedColors.length}
-                    </Badge>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[300px] bg-background">
-                <SheetHeader>
-                  <SheetTitle className="font-serif">Filters</SheetTitle>
-                </SheetHeader>
-                <FilterSidebar
-                  allSizes={allSizes}
-                  allColors={allColors}
-                  selectedSizes={selectedSizes}
-                  selectedColors={selectedColors}
-                  toggleSize={toggleSize}
-                  toggleColor={toggleColor}
-                  clearFilters={clearFilters}
-                  hasActiveFilters={hasActiveFilters}
-                />
-              </SheetContent>
-            </Sheet>
-
-            {/* Desktop Filter Summary */}
-            <div className="hidden md:flex items-center gap-2">
-              {hasActiveFilters && (
-                <>
-                  <span className="text-sm text-muted-foreground">Active filters:</span>
-                  {selectedSizes.map(size => (
-                    <Badge
-                      key={size}
-                      variant="secondary"
-                      className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
-                      onClick={() => toggleSize(size)}
-                    >
-                      {size} <X className="h-3 w-3 ml-1" />
-                    </Badge>
-                  ))}
-                  {selectedColors.map(color => (
-                    <Badge
-                      key={color}
-                      variant="secondary"
-                      className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
-                      onClick={() => toggleColor(color)}
-                    >
-                      {color} <X className="h-3 w-3 ml-1" />
-                    </Badge>
-                  ))}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearFilters}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Clear all
-                  </Button>
-                </>
-              )}
-            </div>
-
-            {/* Sort Dropdown */}
+          {/* Sort Toolbar */}
+          <div className="flex items-center justify-end gap-4 mb-8 pb-4 border-b border-border">
             <div className="relative">
               <Button
                 variant="outline"
@@ -258,44 +146,36 @@ const Collections = () => {
             </div>
           </div>
 
-          <div className="flex gap-8">
-            {/* Desktop Sidebar */}
-            <aside className="hidden md:block w-64 shrink-0">
-              <FilterSidebar
-                allSizes={allSizes}
-                allColors={allColors}
-                selectedSizes={selectedSizes}
-                selectedColors={selectedColors}
-                toggleSize={toggleSize}
-                toggleColor={toggleColor}
-                clearFilters={clearFilters}
-                hasActiveFilters={hasActiveFilters}
-              />
-            </aside>
-
-            {/* Product Grid */}
-            <div className="flex-1">
-              {filteredProducts.length === 0 ? (
-                <div className="text-center py-16">
-                  <p className="text-muted-foreground text-lg mb-4">No products match your filters</p>
-                  <Button onClick={clearFilters} variant="outline" className="border-accent text-accent">
-                    Clear Filters
-                  </Button>
+          {/* Product Grid */}
+          {isLoading ? (
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[3/4] bg-muted rounded-sm mb-4" />
+                  <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                  <div className="h-4 bg-muted rounded w-1/4" />
                 </div>
-              ) : (
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
-                >
-                  {filteredProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </motion.div>
-              )}
+              ))}
             </div>
-          </div>
+          ) : sortedProducts.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-muted-foreground text-lg mb-2">No products found</p>
+              <p className="text-muted-foreground text-sm">
+                Products added to your store will appear here automatically.
+              </p>
+            </div>
+          ) : (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+            >
+              {sortedProducts.map((product) => (
+                <ShopifyProductCard key={product.node.id} product={product} />
+              ))}
+            </motion.div>
+          )}
         </div>
       </main>
 
@@ -304,95 +184,33 @@ const Collections = () => {
   );
 };
 
-interface FilterSidebarProps {
-  allSizes: string[];
-  allColors: { name: string; value: string }[];
-  selectedSizes: string[];
-  selectedColors: string[];
-  toggleSize: (size: string) => void;
-  toggleColor: (colorName: string) => void;
-  clearFilters: () => void;
-  hasActiveFilters: boolean;
-}
-
-const FilterSidebar = ({
-  allSizes,
-  allColors,
-  selectedSizes,
-  selectedColors,
-  toggleSize,
-  toggleColor,
-  clearFilters,
-  hasActiveFilters,
-}: FilterSidebarProps) => {
-  return (
-    <div className="space-y-8 py-4">
-      {/* Size Filter */}
-      <div>
-        <h3 className="font-medium text-foreground mb-4">Size</h3>
-        <div className="flex flex-wrap gap-2">
-          {allSizes.map(size => (
-            <button
-              key={size}
-              onClick={() => toggleSize(size)}
-              className={`w-10 h-10 rounded-lg border-2 font-medium text-sm transition-all ${
-                selectedSizes.includes(size)
-                  ? "border-accent bg-accent text-accent-foreground"
-                  : "border-border hover:border-accent text-foreground"
-              }`}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Color Filter */}
-      <div>
-        <h3 className="font-medium text-foreground mb-4">Color</h3>
-        <div className="space-y-3">
-          {allColors.map(color => (
-            <label
-              key={color.name}
-              className="flex items-center gap-3 cursor-pointer group"
-            >
-              <Checkbox
-                checked={selectedColors.includes(color.name)}
-                onCheckedChange={() => toggleColor(color.name)}
-                className="border-border data-[state=checked]:bg-accent data-[state=checked]:border-accent"
-              />
-              <span
-                className="w-5 h-5 rounded-full border border-border"
-                style={{ backgroundColor: color.value }}
-              />
-              <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                {color.name}
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Clear Filters */}
-      {hasActiveFilters && (
-        <Button
-          onClick={clearFilters}
-          variant="outline"
-          className="w-full border-accent text-accent hover:bg-accent hover:text-accent-foreground"
-        >
-          Clear All Filters
-        </Button>
-      )}
-    </div>
-  );
-};
-
-const ProductCard = ({ product }: { product: Product }) => {
+const ShopifyProductCard = ({ product }: { product: ShopifyProduct }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const addItem = useCartStore((s) => s.addItem);
 
-  const displayImage = product.colors[selectedColorIndex]?.image || product.images[0];
+  const { node } = product;
+  const image = node.images.edges[0]?.node;
+  const price = node.priceRange.minVariantPrice;
+  const firstVariant = node.variants.edges[0]?.node;
+
+  const handleQuickAdd = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!firstVariant) return;
+    try {
+      await addItem({
+        product,
+        variantId: firstVariant.id,
+        variantTitle: firstVariant.title,
+        price: firstVariant.price,
+        quantity: 1,
+        selectedOptions: firstVariant.selectedOptions,
+      });
+      toast.success("Added to cart");
+    } catch {
+      toast.error("Failed to add to cart");
+    }
+  };
 
   return (
     <motion.div
@@ -401,23 +219,19 @@ const ProductCard = ({ product }: { product: Product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link to={`/product/${product.slug}`}>
+      <Link to={`/product/${node.handle}`}>
         <div className="relative aspect-[3/4] mb-4 overflow-hidden rounded-sm bg-muted border border-border/50 group-hover:border-accent/30 transition-colors">
-          <img
-            src={displayImage}
-            alt={product.name}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {product.isNew && (
-              <Badge className="bg-foreground text-background text-xs px-2 py-1">New</Badge>
-            )}
-            {product.isSale && (
-              <Badge className="bg-accent text-accent-foreground text-xs px-2 py-1">Sale</Badge>
-            )}
-          </div>
+          {image ? (
+            <img
+              src={image.url}
+              alt={image.altText || node.title}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+              No image
+            </div>
+          )}
 
           {/* Favorite Button */}
           <button
@@ -440,9 +254,9 @@ const ProductCard = ({ product }: { product: Product }) => {
               isHovered ? "translate-y-0" : "translate-y-full"
             }`}
           >
-            <Button 
+            <Button
               className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-sm"
-              onClick={(e) => e.preventDefault()}
+              onClick={handleQuickAdd}
             >
               <ShoppingBag className="h-4 w-4 mr-2" />
               Quick Add
@@ -451,49 +265,15 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
       </Link>
 
-      {/* Product Info */}
       <div>
-        {/* Rating */}
-        <div className="flex items-center gap-1 mb-1">
-          <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-          <span className="text-xs text-muted-foreground">
-            {product.rating} ({product.reviewCount})
-          </span>
-        </div>
-
-        <Link to={`/product/${product.slug}`}>
+        <Link to={`/product/${node.handle}`}>
           <h3 className="font-medium text-sm md:text-base mb-1 group-hover:text-accent transition-colors line-clamp-2">
-            {product.name}
+            {node.title}
           </h3>
         </Link>
-
-        {/* Price */}
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-foreground">${product.price}</span>
-          {product.originalPrice && (
-            <span className="text-muted-foreground line-through text-sm">
-              ${product.originalPrice}
-            </span>
-          )}
-        </div>
-
-        {/* Color Swatches */}
-        <div className="flex items-center gap-1.5 mt-2">
-          {product.colors.slice(0, 4).map((color, i) => (
-            <button
-              key={i}
-              onClick={() => setSelectedColorIndex(i)}
-              className={`w-4 h-4 rounded-full border transition-transform hover:scale-110 ${
-                selectedColorIndex === i ? 'border-accent ring-1 ring-accent ring-offset-1 ring-offset-background' : 'border-border hover:border-accent'
-              }`}
-              style={{ backgroundColor: color.value }}
-              title={color.name}
-            />
-          ))}
-          {product.colors.length > 4 && (
-            <span className="text-xs text-muted-foreground">+{product.colors.length - 4}</span>
-          )}
-        </div>
+        <span className="font-semibold text-foreground">
+          ${parseFloat(price.amount).toFixed(2)} {price.currencyCode}
+        </span>
       </div>
     </motion.div>
   );
