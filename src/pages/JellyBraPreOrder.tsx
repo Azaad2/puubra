@@ -231,7 +231,7 @@ const JellyBraPreOrder = () => {
         if (checkoutUrl) {
           window.location.href = checkoutUrl;
         } else {
-          window.location.href = "https://peuvfx-1e.myshopify.com/cart";
+          toast({ title: "Checkout is being prepared. Please try again in a moment.", variant: "destructive" });
         }
       }, 1800);
 
