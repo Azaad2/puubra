@@ -1,36 +1,29 @@
 
 
-## Plan: Rebrand buubra → puubra
+## Problem
 
-### Summary
-Replace all instances of "buubra" with "puubra" across the entire codebase, including brand name, domain references, email addresses, social handles, hashtags, and the logo asset filename.
+Your domain `puubra.com` currently points to Shopify's default storefront theme (the page in your screenshot), not your Lovable-built website. This is a DNS/domain configuration issue.
 
-### Files to Modify (17 files, ~244 replacements)
+Additionally, there's a fallback URL in the code that redirects users to the raw Shopify store.
 
-| File | Changes |
-|------|---------|
-| `index.html` | Title, meta tags, twitter handle |
-| `src/index.css` | CSS comment |
-| `src/components/layout/Header.tsx` | Logo import path, alt text |
-| `src/components/layout/Footer.tsx` | Logo import, alt text, email (`hello@puubra.com`), copyright, newsletter text |
-| `src/components/home/UGCGallery.tsx` | `@puubra`, `#puubraStyle` |
-| `src/components/home/BrandStory.tsx` | Brand references |
-| `src/components/home/HeroSection.tsx` | Brand references |
-| `src/components/home/CustomerReviews.tsx` | Brand references |
-| `src/pages/About.tsx` | Brand name, alt text |
-| `src/pages/OurStory.tsx` | Brand references in timeline |
-| `src/pages/Sustainability.tsx` | Brand references, email |
-| `src/pages/FAQ.tsx` | Brand references, email |
-| `src/pages/SizeGuide.tsx` | Email references |
-| `src/pages/Contact.tsx` | Brand/email references |
-| `src/pages/Returns.tsx` | Brand/email references |
-| `src/pages/Shipping.tsx` | Brand references |
-| `src/pages/Careers.tsx` | Brand references |
+## What Needs to Happen
 
-### Asset Rename
-- Rename `src/assets/buubra-logo.png` → `src/assets/puubra-logo.png`
-- Update import paths in Header.tsx and Footer.tsx
+### 1. Domain Configuration (outside Lovable)
+Your domain `puubra.com` is currently configured to serve the Shopify default theme. You have two options:
 
-### Approach
-Simple find-and-replace of `buubra` → `puubra` (case-sensitive) across all files, plus rename the logo asset file.
+- **Option A**: Point `puubra.com` to your Lovable site instead of Shopify. You can set up a custom domain for your Lovable project through the publish settings. Shopify would then only act as the backend (API + checkout).
+- **Option B**: Keep `puubra.com` on Shopify but customize that Shopify theme to match your Lovable design (not recommended since you're building here).
+
+### 2. Code Fix
+Remove the fallback redirect to `myshopify.com/cart` in `JellyBraPreOrder.tsx` so users are never sent to the Shopify-hosted storefront.
+
+**File**: `src/pages/JellyBraPreOrder.tsx`
+- Replace the fallback `window.location.href = "https://peuvfx-1e.myshopify.com/cart"` with a user-friendly error message or redirect to the Lovable site's cart.
+
+## Technical Details
+
+| Task | Scope |
+|------|-------|
+| Remove Shopify store fallback URL | `src/pages/JellyBraPreOrder.tsx` line 234 |
+| Set up custom domain for Lovable | Publish settings (no code change) |
 
