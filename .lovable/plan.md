@@ -1,29 +1,19 @@
+## Mark Categories as Coming Soon
 
+Update the "Shop by Category" section on the homepage so **Tops**, **Pantyhose**, and **Pajama Sets** display as "Coming Soon" while **Bras** remains shoppable.
 
-## Problem
+### Changes
 
-Your domain `puubra.com` currently points to Shopify's default storefront theme (the page in your screenshot), not your Lovable-built website. This is a DNS/domain configuration issue.
+**File: `src/components/home/FeaturedCollections.tsx`**
 
-Additionally, there's a fallback URL in the code that redirects users to the raw Shopify store.
+1. Add a `comingSoon: true` flag to the Tops, Pantyhose, and Pajama Sets entries (Bras stays clickable).
+2. For coming-soon cards:
+   - Render a non-clickable `<div>` instead of a `<Link>` (cursor stays default, no navigation).
+   - Add a "Coming Soon" badge overlay (top-right, rose-gold/accent styling consistent with the dark luxury theme).
+   - Slightly dim the image (e.g. `opacity-60`) and replace the "Shop Now →" CTA text with "Coming Soon".
+   - Disable the hover scale/border effects so it reads clearly as inactive.
 
-## What Needs to Happen
+### Out of Scope
 
-### 1. Domain Configuration (outside Lovable)
-Your domain `puubra.com` is currently configured to serve the Shopify default theme. You have two options:
-
-- **Option A**: Point `puubra.com` to your Lovable site instead of Shopify. You can set up a custom domain for your Lovable project through the publish settings. Shopify would then only act as the backend (API + checkout).
-- **Option B**: Keep `puubra.com` on Shopify but customize that Shopify theme to match your Lovable design (not recommended since you're building here).
-
-### 2. Code Fix
-Remove the fallback redirect to `myshopify.com/cart` in `JellyBraPreOrder.tsx` so users are never sent to the Shopify-hosted storefront.
-
-**File**: `src/pages/JellyBraPreOrder.tsx`
-- Replace the fallback `window.location.href = "https://peuvfx-1e.myshopify.com/cart"` with a user-friendly error message or redirect to the Lovable site's cart.
-
-## Technical Details
-
-| Task | Scope |
-|------|-------|
-| Remove Shopify store fallback URL | `src/pages/JellyBraPreOrder.tsx` line 234 |
-| Set up custom domain for Lovable | Publish settings (no code change) |
-
+- The `/collections/tops`, `/collections/pantyhose`, `/collections/pajama-sets` routes still exist via `Collections.tsx`. If a user types the URL directly they'll still load. Let me know if you want those routes to also show a "Coming Soon" page — happy to add that as a follow-up.
+- Header navigation links to these categories (if any) are not changed in this scope.

@@ -11,24 +11,28 @@ const collections = [
     image: brasCover,
     href: "/collections/bras",
     description: "Comfort meets style",
+    comingSoon: false,
   },
   {
     name: "Tops",
     image: topsCover,
     href: "/collections/tops",
     description: "Effortless elegance",
+    comingSoon: true,
   },
   {
     name: "Pantyhose",
     image: pantyhoseCover,
     href: "/collections/pantyhose",
     description: "Seamless sophistication",
+    comingSoon: true,
   },
   {
     name: "Pajama Sets",
     image: pajamasCover,
     href: "/collections/pajama-sets",
     description: "Luxurious loungewear",
+    comingSoon: true,
   },
 ];
 
@@ -81,28 +85,56 @@ export const FeaturedCollections = () => {
         >
           {collections.map((collection) => (
             <motion.div key={collection.name} variants={itemVariants}>
-              <Link
-                to={collection.href}
-                className="group block relative aspect-[3/4] overflow-hidden rounded-sm border border-border/50 hover:border-accent/50 transition-colors"
-              >
-                <img
-                  src={collection.image}
-                  alt={collection.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                  <h3 className="font-serif text-xl md:text-2xl text-foreground font-medium mb-1">
-                    {collection.name}
-                  </h3>
-                  <p className="text-foreground/60 text-sm hidden md:block">
-                    {collection.description}
-                  </p>
-                  <span className="inline-flex items-center text-accent text-sm mt-3 group-hover:translate-x-2 transition-transform duration-300">
-                    Shop Now →
+              {collection.comingSoon ? (
+                <div
+                  aria-disabled="true"
+                  className="block relative aspect-[3/4] overflow-hidden rounded-sm border border-border/50 cursor-not-allowed"
+                >
+                  <img
+                    src={collection.image}
+                    alt={collection.name}
+                    className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30" />
+                  <span className="absolute top-3 right-3 text-[10px] md:text-xs uppercase tracking-[0.2em] px-2.5 py-1 rounded-sm bg-accent/15 text-accent border border-accent/40 backdrop-blur-sm">
+                    Coming Soon
                   </span>
+                  <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+                    <h3 className="font-serif text-xl md:text-2xl text-foreground/80 font-medium mb-1">
+                      {collection.name}
+                    </h3>
+                    <p className="text-foreground/50 text-sm hidden md:block">
+                      {collection.description}
+                    </p>
+                    <span className="inline-flex items-center text-accent/80 text-sm mt-3 italic">
+                      Coming Soon
+                    </span>
+                  </div>
                 </div>
-              </Link>
+              ) : (
+                <Link
+                  to={collection.href}
+                  className="group block relative aspect-[3/4] overflow-hidden rounded-sm border border-border/50 hover:border-accent/50 transition-colors"
+                >
+                  <img
+                    src={collection.image}
+                    alt={collection.name}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+                    <h3 className="font-serif text-xl md:text-2xl text-foreground font-medium mb-1">
+                      {collection.name}
+                    </h3>
+                    <p className="text-foreground/60 text-sm hidden md:block">
+                      {collection.description}
+                    </p>
+                    <span className="inline-flex items-center text-accent text-sm mt-3 group-hover:translate-x-2 transition-transform duration-300">
+                      Shop Now →
+                    </span>
+                  </div>
+                </Link>
+              )}
             </motion.div>
           ))}
         </motion.div>
