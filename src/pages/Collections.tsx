@@ -13,6 +13,8 @@ import { toast } from "sonner";
 
 type SortOption = "featured" | "price-asc" | "price-desc";
 
+const COMING_SOON_CATEGORIES = ["tops", "pantyhose", "pajama-sets"];
+
 const sortOptions: { value: SortOption; label: string }[] = [
   { value: "featured", label: "Featured" },
   { value: "price-asc", label: "Price: Low to High" },
@@ -34,12 +36,18 @@ const itemVariants = {
 
 const Collections = () => {
   const { category } = useParams();
+  const isComingSoon = category ? COMING_SOON_CATEGORIES.includes(category.toLowerCase()) : false;
   const [sortBy, setSortBy] = useState<SortOption>("featured");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (isComingSoon) {
+      setIsLoading(false);
+      setProducts([]);
+      return;
+    }
     const load = async () => {
       setIsLoading(true);
       try {
@@ -53,7 +61,7 @@ const Collections = () => {
       }
     };
     load();
-  }, [category]);
+  }, [category, isComingSoon]);
 
   const sortedProducts = useMemo(() => {
     const result = [...products];
@@ -79,6 +87,53 @@ const Collections = () => {
   const categoryTitle = category
     ? category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')
     : "All Products";
+
+  if (isComingSoon) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4">
+            <nav className="text-sm text-muted-foreground mb-6">
+              <Link to="/" className="hover:text-accent transition-colors">Home</Link>
+              <span className="mx-2">/</span>
+              <span className="text-foreground">{categoryTitle}</span>
+            </nav>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="flex flex-col items-center justify-center text-center py-24 md:py-32"
+            >
+              <span className="text-xs uppercase tracking-[0.3em] px-3 py-1.5 rounded-sm bg-accent/15 text-accent border border-accent/40 mb-8">
+                Coming Soon
+              </span>
+              <h1 className="font-serif text-4xl md:text-6xl font-semibold mb-6">
+                {categoryTitle}
+              </h1>
+              <p className="text-muted-foreground text-lg max-w-xl mb-10 leading-relaxed">
+                Our {categoryTitle.toLowerCase()} collection is being crafted with the same care and quality
+                you expect from Puubra. Be the first to know when it launches.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/collections/bras">
+                  <Button className="bg-accent hover:bg-accent/90 text-accent-foreground min-w-[200px]">
+                    Shop Bras Collection
+                  </Button>
+                </Link>
+                <Link to="/">
+                  <Button variant="outline" className="border-border min-w-[200px]">
+                    Back to Home
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
