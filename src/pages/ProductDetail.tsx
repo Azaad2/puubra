@@ -52,6 +52,17 @@ const ProductDetail = () => {
     loadProduct();
   }, [id]);
 
+  // Sync gallery to the default variant's image once the product is loaded
+  useEffect(() => {
+    if (!product) return;
+    const variants = product.variants?.edges?.map(e => e.node) || [];
+    const images = product.images?.edges?.map(e => e.node) || [];
+    const variantImageUrl = variants[0]?.image?.url;
+    if (!variantImageUrl) return;
+    const matchedIndex = images.findIndex((img) => img.url === variantImageUrl);
+    if (matchedIndex >= 0) setSelectedImage(matchedIndex);
+  }, [product]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -93,6 +104,19 @@ const ProductDetail = () => {
     ? parseFloat(selectedVariant.price.amount) 
     : parseFloat(product.priceRange.minVariantPrice.amount);
   const currencyCode = selectedVariant?.price.currencyCode || product.priceRange.minVariantPrice.currencyCode;
+
+  const syncImageToVariant = (variantIndex: number) => {
+    const variant = variants[variantIndex];
+    const variantImageUrl = variant?.image?.url;
+    if (!variantImageUrl) return;
+    const matchedIndex = images.findIndex((img) => img.url === variantImageUrl);
+    if (matchedIndex >= 0) setSelectedImage(matchedIndex);
+  };
+
+  const handleVariantSelect = (index: number) => {
+    setSelectedVariantIndex(index);
+    syncImageToVariant(index);
+  };
 
   const nextImage = () => {
     setSelectedImage((prev) => (prev + 1) % Math.max(images.length, 1));
@@ -268,7 +292,7 @@ const ProductDetail = () => {
                     {variants.map((variant, index) => (
                       <button
                         key={variant.id}
-                        onClick={() => setSelectedVariantIndex(index)}
+                        onClick={() => handleVariantSelect(index)}
                         disabled={!variant.availableForSale}
                         className={`px-4 py-2 rounded-lg border-2 font-medium transition-all ${
                           selectedVariantIndex === index
