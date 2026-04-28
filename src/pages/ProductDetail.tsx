@@ -94,6 +94,19 @@ const ProductDetail = () => {
     : parseFloat(product.priceRange.minVariantPrice.amount);
   const currencyCode = selectedVariant?.price.currencyCode || product.priceRange.minVariantPrice.currencyCode;
 
+  const syncImageToVariant = (variantIndex: number) => {
+    const variant = variants[variantIndex];
+    const variantImageUrl = variant?.image?.url;
+    if (!variantImageUrl) return;
+    const matchedIndex = images.findIndex((img) => img.url === variantImageUrl);
+    if (matchedIndex >= 0) setSelectedImage(matchedIndex);
+  };
+
+  const handleVariantSelect = (index: number) => {
+    setSelectedVariantIndex(index);
+    syncImageToVariant(index);
+  };
+
   const nextImage = () => {
     setSelectedImage((prev) => (prev + 1) % Math.max(images.length, 1));
   };
@@ -268,7 +281,7 @@ const ProductDetail = () => {
                     {variants.map((variant, index) => (
                       <button
                         key={variant.id}
-                        onClick={() => setSelectedVariantIndex(index)}
+                        onClick={() => handleVariantSelect(index)}
                         disabled={!variant.availableForSale}
                         className={`px-4 py-2 rounded-lg border-2 font-medium transition-all ${
                           selectedVariantIndex === index
