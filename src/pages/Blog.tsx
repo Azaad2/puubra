@@ -5,6 +5,7 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { blogPosts, categories, getPostsByCategory } from "@/data/blogPosts";
 import { Button } from "@/components/ui/button";
+import { SEO } from "@/components/SEO";
 
 const Blog = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -12,6 +13,11 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="The puubra Journal — Style Tips & Care Guides"
+        description="Style tips, care guides, and behind-the-scenes stories from the world of puubra premium lingerie."
+        path="/blog"
+      />
       <AnnouncementBar />
       <Header />
       
