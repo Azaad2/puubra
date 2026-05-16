@@ -2,6 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Heart, Award, Users, Leaf } from "lucide-react";
 import brandStoryImage from "@/assets/brand/brand-story.jpg";
+import { SEO } from "@/components/SEO";
 
 const About = () => {
   const values = [
