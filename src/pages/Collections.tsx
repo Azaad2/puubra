@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { fetchShopifyProducts, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
+import { SEO } from "@/components/SEO";
 
 type SortOption = "featured" | "price-asc" | "price-desc";
 
@@ -91,6 +92,11 @@ const Collections = () => {
   if (isComingSoon) {
     return (
       <div className="min-h-screen bg-background">
+        <SEO
+          title={`${categoryTitle} — Coming Soon to puubra`}
+          description={`The puubra ${categoryTitle.toLowerCase()} collection is on its way. Be the first to know when it launches.`}
+          path={`/collections/${category}`}
+        />
         <Header />
         <main className="pt-24 pb-16">
           <div className="container mx-auto px-4">
@@ -137,6 +143,11 @@ const Collections = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`${categoryTitle} — Shop puubra`}
+        description={`Shop the puubra ${categoryTitle.toLowerCase()} collection. Premium, comfortable lingerie designed for everyday confidence.`}
+        path={`/collections/${category}`}
+      />
       <Header />
 
       <main className="pt-24 pb-16">
