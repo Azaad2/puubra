@@ -30,6 +30,7 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="About puubra — Premium Lingerie & Loungewear" description="Learn about puubra, our values, and the team crafting comfortable, elegant lingerie for everyday confidence." path="/about" />
       <Header />
       <main className="pt-24 pb-16">
         {/* Hero Section */}
