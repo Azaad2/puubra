@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SEO } from "@/components/SEO";
 import {
   Accordion,
   AccordionContent,
@@ -98,6 +99,22 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="FAQ — puubra"
+        description="Answers to common questions about puubra orders, shipping, returns, sizing, product care, and payments."
+        path="/faq"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqCategories.flatMap((c) =>
+            c.questions.map((q) => ({
+              "@type": "Question",
+              name: q.q,
+              acceptedAnswer: { "@type": "Answer", text: q.a },
+            }))
+          ),
+        }}
+      />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
