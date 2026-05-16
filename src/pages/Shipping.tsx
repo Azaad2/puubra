@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Truck, Clock, Globe, Package } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const Shipping = () => {
   const shippingOptions = [
@@ -29,6 +30,7 @@ const Shipping = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Shipping Info — puubra" description="Standard, express, and international shipping options for puubra orders, plus free shipping on US orders over $75." path="/shipping" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">

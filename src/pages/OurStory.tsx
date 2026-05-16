@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import brandStoryImage from "@/assets/brand/brand-story.jpg";
+import { SEO } from "@/components/SEO";
 
 const OurStory = () => {
   const timeline = [
@@ -33,6 +34,7 @@ const OurStory = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Our Story — puubra" description="The story behind puubra: from a simple frustration to a global community of women choosing comfort and confidence." path="/our-story" />
       <Header />
       <main className="pt-24 pb-16">
         {/* Hero */}

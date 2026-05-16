@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { products } from "@/data/products";
+import { SEO } from "@/components/SEO";
 
 const Sale = () => {
   // Filter products that are on sale (have originalPrice)
@@ -10,6 +11,7 @@ const Sale = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Sale — puubra Premium Lingerie" description="Shop the puubra sale: limited-time deals on premium, comfortable lingerie. New markdowns added regularly." path="/sale" />
       <Header />
       <main className="pt-24 pb-16">
         {/* Hero Banner */}

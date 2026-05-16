@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Leaf, Recycle, Droplets, Package, Heart, TreePine } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const Sustainability = () => {
   const initiatives = [
@@ -44,6 +45,7 @@ const Sustainability = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Sustainability — puubra" description="How puubra reduces its footprint through sustainable materials, recycled packaging, and water conservation." path="/sustainability" />
       <Header />
       <main className="pt-24 pb-16">
         {/* Hero */}

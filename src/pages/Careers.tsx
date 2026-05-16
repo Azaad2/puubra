@@ -2,6 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Briefcase, Heart, Sparkles, Users, Coffee, Plane } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const Careers = () => {
   const benefits = [
@@ -42,6 +43,7 @@ const Careers = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Careers at puubra" description="Join puubra. Explore open roles in design, marketing, and operations, plus benefits and our team culture." path="/careers" />
       <Header />
       <main className="pt-24 pb-16">
         {/* Hero */}

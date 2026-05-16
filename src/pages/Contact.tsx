@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { SEO } from "@/components/SEO";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -36,6 +37,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Contact puubra — Customer Care" description="Get in touch with puubra. Reach our customer care team for questions about orders, sizing, returns, and more." path="/contact" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-6xl">

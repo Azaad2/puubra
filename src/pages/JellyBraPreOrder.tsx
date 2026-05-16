@@ -17,6 +17,7 @@ import jellyBraWhite from "@/assets/products/jelly-bra-white.png";
 import jellyBraOlive from "@/assets/products/jelly-bra-olive.png";
 import jellyBraRose from "@/assets/products/jelly-bra-rose.png";
 import jellyBraBlack from "@/assets/products/jelly-bra-black.png";
+import { SEO } from "@/components/SEO";
 
 const JELLY_PRODUCT_HANDLE = "stary-bliss-jelly-bra";
 
@@ -250,6 +251,7 @@ const JellyBraPreOrder = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <AnnouncementBar />
+      <SEO title="Jelly Bra Pre-Order — puubra" description="Pre-order the signature puubra Jelly Bra: ultra-comfortable wireless support with all-day softness." path="/jelly-bra" />
       <Header />
 
       <main className="flex-grow">

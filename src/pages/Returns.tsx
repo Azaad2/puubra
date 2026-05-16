@@ -1,10 +1,12 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { RotateCcw, CheckCircle, XCircle, Clock } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const Returns = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Returns & Exchanges — puubra" description="Free 30-day returns and exchanges on puubra lingerie. See our hassle-free return policy and process." path="/returns" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
