@@ -6,6 +6,7 @@ import { BlogCard } from "@/components/blog/BlogCard";
 import { getPostBySlug, getRelatedPosts } from "@/data/blogPosts";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -33,6 +34,23 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title={`${post.title} — puubra Journal`}
+        description={post.excerpt}
+        path={`/blog/${post.slug}`}
+        image={post.image}
+        type="article"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: post.title,
+          description: post.excerpt,
+          image: post.image,
+          author: { "@type": "Person", name: post.author },
+          datePublished: post.date,
+          mainEntityOfPage: `https://puubra.com/blog/${post.slug}`,
+        }}
+      />
       <AnnouncementBar />
       <Header />
       

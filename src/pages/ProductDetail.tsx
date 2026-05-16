@@ -9,6 +9,7 @@ import { fetchProductByHandle, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 import { trackViewContent, trackAddToCart } from "@/hooks/useMetaPixel";
+import { SEO } from "@/components/SEO";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -176,6 +177,30 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`${product.title} — puubra`}
+        description={(product.description || `Shop ${product.title} at puubra. Premium, comfortable lingerie designed for everyday confidence.`).slice(0, 155)}
+        path={`/product/${id}`}
+        image={images[0]?.url}
+        type="product"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.title,
+          description: product.description,
+          image: images.map((i) => i.url),
+          brand: { "@type": "Brand", name: "puubra" },
+          offers: {
+            "@type": "Offer",
+            price: price.toFixed(2),
+            priceCurrency: currencyCode,
+            availability: selectedVariant?.availableForSale
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+            url: `https://puubra.com/product/${id}`,
+          },
+        }}
+      />
       <Header />
       
       <main className="pt-24 pb-16">

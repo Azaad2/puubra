@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SEO } from "@/components/SEO";
 
 const SizeGuide = () => {
   const braSizes = [
@@ -20,6 +21,7 @@ const SizeGuide = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Size Guide — puubra" description="Find your perfect puubra size. Bra band and cup charts, plus body measurements for tops and loungewear." path="/size-guide" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">

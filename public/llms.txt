@@ -1,0 +1,27 @@
+# puubra
+
+> puubra is a premium lingerie and loungewear brand. We design comfortable, elegant pieces — including our signature wireless Jelly Bra — that help women feel confident every day.
+
+## Pages
+
+- [Home](/): Brand introduction, featured collections, and best sellers.
+- [Bras Collection](/collections/bras): Shop our full bra collection including wireless and Jelly Bra styles.
+- [Tops Collection](/collections/tops): Coming soon.
+- [Pantyhose Collection](/collections/pantyhose): Coming soon.
+- [Pajama Sets Collection](/collections/pajamas): Coming soon.
+- [Sale](/sale): Current promotions and discounted lingerie.
+- [Jelly Bra Pre-Order](/jelly-bra): Pre-order our signature wireless Jelly Bra.
+- [Journal](/blog): Style tips, care guides, and stories from puubra.
+- [About](/about): Who we are and what we stand for.
+- [Our Story](/our-story): The story behind puubra.
+- [Sustainability](/sustainability): Our commitment to responsible production.
+- [Careers](/careers): Open roles at puubra.
+- [Contact](/contact): Get in touch with our customer care team.
+- [FAQ](/faq): Common questions about orders, shipping, returns, and care.
+- [Size Guide](/size-guide): How to find your perfect size.
+- [Shipping](/shipping): Shipping options, times, and rates.
+- [Returns](/returns): Return and exchange policy.
+
+## Optional
+
+- Contact: hello@puubra.com
