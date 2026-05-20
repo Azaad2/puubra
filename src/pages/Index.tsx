@@ -10,7 +10,6 @@ import { BrandStory } from "@/components/home/BrandStory";
 import { CustomerReviews } from "@/components/home/CustomerReviews";
 import { UGCGallery } from "@/components/home/UGCGallery";
 import { TrustBadges } from "@/components/home/TrustBadges";
-import { JellyBraPromo } from "@/components/home/JellyBraPromo";
 import { BlogPreview } from "@/components/home/BlogPreview";
 
 const Index = () => {
@@ -18,7 +17,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <SEO
         title="puubra — Premium Lingerie & Loungewear"
-        description="Premium, comfortable lingerie designed to make you feel confident every day. Shop bras, the signature Jelly Bra, and more at puubra."
+        description="Premium, comfortable lingerie designed to make you feel confident every day. Shop bras and more at puubra."
         path="/"
         jsonLd={{
           "@context": "https://schema.org",
@@ -31,7 +30,6 @@ const Index = () => {
       <Header />
       <main className="flex-grow">
         <HeroSection />
-        <JellyBraPromo />
         <BestSellers />
         <PromoBanner />
         <FeaturedCollections />
